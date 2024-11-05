@@ -34,7 +34,7 @@ ex) Login_page_feat/#1
 
 전부 올바르게 설정했다면, 아래 사진처럼 표시됩니다.
 
-![alt text](image.png)
+![alt text](./README_Data/image.png)
 
 ### PR
 
