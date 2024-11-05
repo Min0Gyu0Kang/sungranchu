@@ -7,8 +7,11 @@
 ### Title
 
 [Feat] : 새로운 파일을 새로 구현할 때
+
 [Fix] : 기존 파일을 수정할 때
+
 [Network] : Back과 api 연결할 때
+
 ex) [Feat] Login page
 
 ### Assignees
