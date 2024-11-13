@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SungranchuApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(SungranchuApplication.class, args);
+		System.out.println("hello");
+
 	}
 
 }
