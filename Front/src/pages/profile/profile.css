@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  justify-content: left; /* 수평 중앙 */
+  align-items: top; /* 수직 중앙 */
+  width: 100vw;
+  height: 100vh;
+}
+
+.box {
+  width: 27%; /* 부모 너비의 50% */
+  height:48%; /* 부모 높이의 50% */
+  background-color: lightcoral;
+}
