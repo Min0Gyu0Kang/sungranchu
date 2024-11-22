@@ -5,8 +5,17 @@ export default function MyPage () {
   return (
     <div className="container">
       <div className="box">
-        test page 입니당. 
+        <UpperNav />
+
       </div>
     </div>
   )
+}
+
+function UpperNav() {
+  return (
+    <div className="upper-nav">
+      <b className="nav-title">마이 페이지</b>
+    </div>
+  );
 }
