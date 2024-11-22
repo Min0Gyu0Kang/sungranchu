@@ -5,7 +5,7 @@ export default function MyPage () {
   return (
     <div className="container">
       <div className="box">
-        test page 입니당. 
+        test 
       </div>
     </div>
   )

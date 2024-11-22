@@ -3,11 +3,13 @@
   justify-content: left; /* 수평 중앙 */
   align-items: top; /* 수직 중앙 */
   width: 100vw;
-  height: 100vh;
+  height: 100vw;
+  padding: 50px;
 }
 
 .box {
-  width: 27%; /* 부모 너비의 50% */
-  height:48%; /* 부모 높이의 50% */
-  background-color: lightcoral;
+  width: 36%; /* 부모 너비의 50% */
+  height: 64%; /* 부모 높이의 50% */
+  border: 3px solid black; /* 3px 두께의 파란 점선 테두리 */
+  border-radius: 10px; /* 테두리를 둥글게 (10px 곡률) */
 }
