@@ -1,0 +1,70 @@
+/* 전체 화면 정렬 */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 16px;
+  background-color: #f0f9ff; /* 배경 색 */
+  font-family: Arial, sans-serif;
+}
+
+/* 헤더 스타일 */
+.header {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.header h1 {
+  font-size: 24px;
+  margin: 0;
+  color: #333;
+}
+
+.header p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 이미지 스타일 */
+.image-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board-image {
+  width: 80%;
+  max-width: 300px;
+  height: auto;
+}
+
+/* 버튼 스타일 */
+.create-account-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.create-account-btn:hover {
+  background-color: #45a049;
+}
+
+/* 로그인 텍스트 스타일 */
+.login-text {
+  font-size: 14px;
+  color: #333;
+}
+
+.login-link {
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+}
