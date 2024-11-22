@@ -1,0 +1,67 @@
+/* 전체 컨테이너 스타일 */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* 화면 중앙에 배치 */
+    height: 100vh;
+    padding: 20px;
+    background-color: #f0f9ff; /* 배경 색상 */
+    font-family: Arial, sans-serif;
+  }
+  
+  /* 헤더 스타일 */
+  .header {
+    text-align: center;
+    margin-bottom: 20px; /* 이미지와 버튼 사이 간격 조정 */
+  }
+  
+  .board-image {
+    width: 200px; /* 이미지 크기를 키움 */
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .title {
+    font-size: 28px; /* 제목 크기 키움 */
+    color: #333;
+    margin: 0;
+  }
+  
+  .subtitle {
+    font-size: 16px; /* 부제목 크기 키움 */
+    color: #666;
+    margin-top: 5px;
+  }
+  
+  /* 버튼 스타일 */
+  .create-account-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 80%;
+    max-width: 300px;
+  }
+  
+  .create-account-btn:hover {
+    background-color: #45a049;
+  }
+  
+  /* 하단 텍스트 스타일 */
+  .login-text {
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+  .login-link {
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
