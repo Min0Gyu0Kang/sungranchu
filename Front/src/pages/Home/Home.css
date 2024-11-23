@@ -3,123 +3,185 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 10px 15px; /* 좌우 여백 줄임 */
     background-color: #f0f9ff;
     font-family: Arial, sans-serif;
     height: 100vh;
     justify-content: space-between;
     box-sizing: border-box;
-  }
-  
-  /* 상단 제목 */
-  .header {
+    max-width: 375px; /* 모바일 앱 크기 기준 */
+    margin: 0 auto;
+    overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
+}
+
+/* 상단 제목 */
+.header {
     text-align: center;
-  }
-  
-  .title {
-    font-size: 24px;
+    padding-top: 5px; /* 상단 여백 줄임 */
+    margin-bottom: 5px; /* 제목과 부제목 아래 여백 */
+    position: relative; /* 선 위치 조정을 위해 추가 */
+}
+
+.header::before {
+    content: "";
+    position: absolute;
+    top: 20px; /* 선을 약간 아래로 내림 */
+    left: 0;
+    width: 100%;
+    height: 1px; /* 선 두께 */
+    background-color: #ccc; /* 선 색상 */
+}
+
+.title {
+    font-size: 20px; /* 제목 크기 */
     font-weight: bold;
     color: #333;
-  }
-  
-  .subtitle {
-    font-size: 14px;
+    margin: 8px 0 3px 0; /* 제목과 부제목 간격 줄임 */
+}
+
+.subtitle {
+    font-size: 11px; /* 부제목 크기 */
     color: #666;
-  }
-  
-  /* 카테고리 아이콘 영역 */
-  .category-container {
+    margin-bottom: 5px; /* 부제목 아래 여백 */
+}
+
+
+/* 카테고리 아이콘 영역 */
+.category-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin: 20px 0;
-  }
-  
-  .category {
+    gap: 8px; /* 아이콘 간격 축소 */
+    margin: 5px 0;
+}
+
+.category {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 12px;
+    font-size: 11px; /* 글씨 크기 줄임 */
     color: #333;
-  }
-  
-  .category img {
-    width: 40px;
-    height: 40px;
+    padding: 8px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category.selected {
+    border-color: #519a51;
+    background-color: #f0fff0;
+}
+
+.category img {
+    width: 32px; /* 이미지 크기 줄임 */
+    height: 32px;
     margin-bottom: 5px;
-  }
-  
-  /* 뽑기 버튼 */
-  .draw-button {
-    background-color: #4caf50;
+}
+
+/* 뽑기 버튼 */
+.draw-button {
+    background-color: #145017;
     color: white;
     border: none;
     border-radius: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 8px 16px; /* 버튼 크기 축소 */
+    font-size: 14px; /* 텍스트 크기 축소 */
     cursor: pointer;
-  }
-  
-  .draw-button:hover {
-    background-color: #45a049;
-  }
-  
-  /* 추천 리스트 */
-  .recommendation {
     width: 100%;
-  }
-  
-  .recommendation-title {
-    font-size: 18px;
+    max-width: 320px;
+    box-sizing: border-box;
+    margin-top: 10px; /* 버튼 위 간격 줄임 */
+}
+
+.draw-button:hover {
+    background-color: #145017;
+}
+
+/* 추천 리스트 */
+.recommendation {
+    width: 100%;
+    margin-top: 10px; /* 추천 리스트 위 간격 줄임 */
+}
+
+.recommendation-title {
+    font-size: 14px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     color: #333;
-  }
-  
-  .recommendation-container {
+}
+
+.recommendation-container {
     display: flex;
-    gap: 10px;
-  }
-  
-  .recommendation-item {
+    gap: 8px; /* 이미지 간격 축소 */
+}
+
+.recommendation-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .recommendation-item img {
-    width: 120px;
-    height: 80px;
-    border-radius: 8px;
-  }
-  
-  .recommendation-item p {
+}
+
+.recommendation-item img {
+    width: 100px; /* 이미지 크기 줄임 */
+    height: 70px;
+}
+
+.recommendation-item p {
     margin-top: 5px;
-    font-size: 14px;
+    font-size: 12px;
     color: #333;
-  }
-  
-  /* 하단 네비게이션 */
-  .footer {
+}
+
+/* 하단 네비게이션 */
+.footer {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    padding: 10px 0;
-    background-color: #ffffff;
+    padding: 8px 0; /* 네비게이션 영역 축소 */
     border-top: 1px solid #ddd;
-  }
-  
-  .nav-item {
+}
+
+.nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 12px;
+    font-size: 10px; /* 글씨 크기 축소 */
     color: #333;
-  }
-  
-  .nav-item img {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 5px;
-  }
-  
+    gap: 3px; /* 아이콘과 글자 간격 줄임 */
+}
+
+.nav-item img {
+    width: 20px; /* 아이콘 크기 줄임 */
+    height: 20px;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    .home-container {
+        padding: 10px;
+        max-width: 320px;
+    }
+
+    .title {
+        font-size: 18px;
+    }
+
+    .subtitle {
+        font-size: 10px;
+    }
+
+    .category img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .draw-button {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .recommendation-item img {
+        width: 90px;
+        height: 60px;
+    }
+}

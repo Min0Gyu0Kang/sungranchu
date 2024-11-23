@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // React Router's useNavigate 가져오기
 import './Home.css';
 
 // 카테고리 아이콘 및 추천 이미지 import
@@ -20,6 +21,42 @@ import restaurant1 from './restaurant1.png';
 import restaurant2 from './restaurant2.png';
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  // 상태 관리: 선택된 카테고리 배열
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  // 카테고리 클릭 핸들러
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategories((prevSelected) => {
+      if (prevSelected.includes(categoryId)) {
+        // 이미 선택된 경우 해제
+        return prevSelected.filter((id) => id !== categoryId);
+      } else {
+        // 선택되지 않은 경우 추가
+        return [...prevSelected, categoryId];
+      }
+    });
+  };
+
+  const handleProfileClick = () => {
+    navigate('/mypage');
+  };
+
+  // 카테고리 데이터 배열
+  const categories = [
+    { id: 'korean', name: '한식', icon: korean },
+    { id: 'japanese', name: '일식', icon: japanese },
+    { id: 'chinese', name: '중식', icon: chinese },
+    { id: 'western', name: '양식', icon: western },
+    { id: 'asian', name: '아시안', icon: asian },
+    { id: 'seafood', name: '해산물', icon: seafood },
+    { id: 'meat', name: '고기', icon: meat },
+    { id: 'hamburger', name: '햄버거', icon: hamburger },
+    { id: 'bakery', name: '베이커리', icon: bakery },
+    { id: 'snack', name: '분식', icon: snack },
+  ];
+
   return (
     <div className="home-container">
       {/* 상단 제목 */}
@@ -30,46 +67,16 @@ export default function Home() {
 
       {/* 카테고리 아이콘 영역 */}
       <div className="category-container">
-        <div className="category">
-          <img src={korean} alt="한식" />
-          <p>한식</p>
-        </div>
-        <div className="category">
-          <img src={japanese} alt="일식" />
-          <p>일식</p>
-        </div>
-        <div className="category">
-          <img src={chinese} alt="중식" />
-          <p>중식</p>
-        </div>
-        <div className="category">
-          <img src={western} alt="양식" />
-          <p>양식</p>
-        </div>
-        <div className="category">
-          <img src={asian} alt="아시안" />
-          <p>아시안</p>
-        </div>
-        <div className="category">
-          <img src={seafood} alt="해산물" />
-          <p>해산물</p>
-        </div>
-        <div className="category">
-          <img src={meat} alt="고기" />
-          <p>고기</p>
-        </div>
-        <div className="category">
-          <img src={hamburger} alt="햄버거" />
-          <p>햄버거</p>
-        </div>
-        <div className="category">
-          <img src={bakery} alt="베이커리" />
-          <p>베이커리</p>
-        </div>
-        <div className="category">
-          <img src={snack} alt="분식" />
-          <p>분식</p>
-        </div>
+        {categories.map((category) => (
+          <div
+            key={category.id}
+            className={`category ${selectedCategories.includes(category.id) ? 'selected' : ''}`}
+            onClick={() => handleCategoryClick(category.id)}
+          >
+            <img src={category.icon} alt={category.name} />
+            <p>{category.name}</p>
+          </div>
+        ))}
       </div>
 
       {/* 뽑기 버튼 */}
@@ -104,7 +111,7 @@ export default function Home() {
           <img src={searchIcon} alt="검색" />
           <p>검색</p>
         </div>
-        <div className="nav-item">
+        <div className="nav-item" onClick={handleProfileClick}>
           <img src={profileIcon} alt="프로필" />
           <p>프로필</p>
         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // React Router's useNavigate
-import './Login.css';
+import './LoginForm.css'; // LoginForm 전용 CSS 파일
 import characterImage from './character.png'; // 이미지 파일 import
 
 export default function LoginForm() {
@@ -12,13 +12,13 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="login-container">
-      <div className="header">
+    <div className="login-form-container">
+      <div className="login-header">
         <img src={characterImage} alt="캐릭터" className="character-image" />
         <p className="speech-bubble">오늘은 어떤 맛집에 가볼까?</p>
       </div>
 
-      <div className="form-container">
+      <div className="form-content">
         <label htmlFor="email">이메일</label>
         <input type="email" id="email" className="input-field" placeholder="이메일 입력" />
 

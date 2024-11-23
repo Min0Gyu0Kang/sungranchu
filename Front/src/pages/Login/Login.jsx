@@ -20,8 +20,6 @@ export default function Login() {
     <div className="login-container">
       <div className="header">
         <img src={boardImage} alt="성랜추 보드" className="board-image" />
-        <h1 className="title">성랜추</h1>
-        <p className="subtitle">성균관대 랜덤 친구 찾기</p>
       </div>
 
       <div className="actions">
