@@ -3,7 +3,7 @@ import './Login.css';
 
 export default function SignupForm() {
   return (
-    <div className="login-container">
+    <div className="signup-container">
       <div className="form-container">
         <label htmlFor="name">이름</label>
         <input type="text" id="name" className="input-field" placeholder="이름 입력" />
