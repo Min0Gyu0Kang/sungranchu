@@ -1,8 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // React Router's useNavigate
 import './Login.css';
 import characterImage from './character.png'; // 이미지 파일 import
 
 export default function LoginForm() {
+  const navigate = useNavigate(); // useNavigate 훅 선언
+
+  // 로그인 버튼 클릭 시 호출될 함수
+  const handleLogin = () => {
+    navigate('/home'); // /home 경로로 이동
+  };
+
   return (
     <div className="login-container">
       <div className="header">
@@ -22,7 +30,9 @@ export default function LoginForm() {
           placeholder="비밀번호 입력"
         />
 
-        <button className="login-btn">로그인 하기</button>
+        <button className="login-btn" onClick={handleLogin}>
+          로그인 하기
+        </button>
       </div>
     </div>
   );

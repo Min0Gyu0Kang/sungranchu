@@ -5,7 +5,7 @@ import MyPage from './pages/profile/mypage.jsx'
 import Login from './pages/Login/Login'; // Login 컴포넌트 가져오기
 import LoginForm from './pages/Login/LoginForm';
 import SignupForm from './pages/Login/SignupForm'; // 계정 생성 페이지
-
+import Home from './pages/Home/Home.jsx';
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
         <Route path="/loginform" element={<LoginForm />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/signup" element={<SignupForm />} />
+        <Route path="/home" element={<Home />} />      
       </Routes>
     </BrowserRouter>
   );
