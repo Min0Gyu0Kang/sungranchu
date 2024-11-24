@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // React Router's useNavigate 가져오기
 import './Home.css';
+import Footer from '../../component/Footer'
 
 // 카테고리 아이콘 및 추천 이미지 import
 import korean from './korean.png';
@@ -13,15 +14,10 @@ import meat from './meat.png';
 import hamburger from './hamburger.png';
 import bakery from './bakery.png';
 import snack from './snack.png';
-import homeIcon from './home.png';
-import mapIcon from './map.png';
-import searchIcon from './search.png';
-import profileIcon from './profile.png';
 import restaurant1 from './restaurant1.png';
 import restaurant2 from './restaurant2.png';
 
 export default function Home() {
-  const navigate = useNavigate();
 
   // 상태 관리: 선택된 카테고리 배열
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -37,10 +33,6 @@ export default function Home() {
         return [...prevSelected, categoryId];
       }
     });
-  };
-
-  const handleProfileClick = () => {
-    navigate('/mypage');
   };
 
   // 카테고리 데이터 배열
@@ -98,24 +90,7 @@ export default function Home() {
       </section>
 
       {/* 하단 네비게이션 */}
-      <footer className="footer">
-        <div className="nav-item">
-          <img src={homeIcon} alt="홈" />
-          <p>홈</p>
-        </div>
-        <div className="nav-item">
-          <img src={mapIcon} alt="지도" />
-          <p>지도</p>
-        </div>
-        <div className="nav-item">
-          <img src={searchIcon} alt="검색" />
-          <p>검색</p>
-        </div>
-        <div className="nav-item" onClick={handleProfileClick}>
-          <img src={profileIcon} alt="프로필" />
-          <p>프로필</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

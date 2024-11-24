@@ -1,13 +1,12 @@
 import React from 'react';
 import './profile.css';
+import Footer from '../../component/Footer'
 
 export default function MyPage () {
   return (
     <div className="container">
-      <div className="box">
-        <UpperNav />
-
-      </div>
+      <UpperNav />
+      <Footer />
     </div>
   )
 }
@@ -17,5 +16,6 @@ function UpperNav() {
     <div className="upper-nav">
       <b className="nav-title">마이 페이지</b>
     </div>
+    
   );
 }

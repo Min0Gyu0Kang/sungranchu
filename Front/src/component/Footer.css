@@ -1,0 +1,22 @@
+/* 하단 네비게이션 */
+.footer {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 8px 0; /* 네비게이션 영역 축소 */
+  border-top: 1px solid #ddd;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 10px; /* 글씨 크기 축소 */
+  color: #333;
+  gap: 3px; /* 아이콘과 글자 간격 줄임 */
+}
+
+.nav-item img {
+  width: 20px; /* 아이콘 크기 줄임 */
+  height: 20px;
+}
