@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // React Router's useNavigate 가져오기
 import './Home.css';
 import Footer from '../../component/Footer'
 
@@ -34,16 +33,6 @@ export default function Home() {
       }
     });
   };
-
-
-  const handleProfileClick = () => {
-    navigate('/mypage');
-  };
-
-  const handleSearchClick = () => {
-    navigate('/search'); // '/search' 경로로 이동
-  };
-  
 
   // 카테고리 데이터 배열
   const categories = [
