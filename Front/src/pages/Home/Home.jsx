@@ -43,6 +43,10 @@ export default function Home() {
     navigate('/mypage');
   };
 
+  const handleSearchClick = () => {
+    navigate('/search'); // '/search' 경로로 이동
+  };
+  
   // 카테고리 데이터 배열
   const categories = [
     { id: 'korean', name: '한식', icon: korean },
@@ -107,9 +111,9 @@ export default function Home() {
           <img src={mapIcon} alt="지도" />
           <p>지도</p>
         </div>
-        <div className="nav-item">
-          <img src={searchIcon} alt="검색" />
-          <p>검색</p>
+        <div className="nav-item" onClick={handleSearchClick}>
+            <img src={searchIcon} alt="검색" />
+            <p>검색</p>
         </div>
         <div className="nav-item" onClick={handleProfileClick}>
           <img src={profileIcon} alt="프로필" />

@@ -1,0 +1,121 @@
+.search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #f8f9fa; /* 연한 배경색 */
+    height: 100vh; /* 화면 전체 높이 */
+    box-sizing: border-box;
+    max-width: 375px; /* 모바일 기준 크기 */
+    margin: 0 auto;
+  }
+  
+  .search-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .search-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+    padding: 8px; /* 검색창 크기 줄이기 */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+  }
+  
+  .search-input {
+    flex: 1;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    padding: 5px;
+  }
+  
+  .search-icon {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .search-results {
+    width: 100%;
+  }
+  
+  .search-category {
+    margin-bottom: 15px; /* 카테고리 간 간격 줄이기 */
+  }
+  
+  .category-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px; /* 카테고리 제목 간격 줄이기 */
+  }
+  
+  .category-items {
+    display: flex;
+    gap: 8px; /* 카테고리 아이템 간 간격 줄이기 */
+    flex-wrap: wrap; /* 화면 너비를 초과할 경우 줄바꿈 */
+  }
+  
+  .category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(50% - 8px); /* 두 개의 아이템이 한 줄에 들어가도록 설정 */
+    background-color: #d8f3dc;
+    border-radius: 8px;
+    padding: 8px; /* 아이템 내부 패딩 줄이기 */
+  }
+  
+  .category-item img {
+    width: 100%;
+    height: 70px; /* 이미지 높이 줄이기 */
+    border-radius: 5px;
+    object-fit: cover;
+  }
+  
+  .category-item p {
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: center;
+  }
+  
+  .footer {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 8px 0; /* 네비게이션 영역 축소 */
+    border-top: 1px solid #ddd;
+    background-color: white;
+    position: sticky; /* 화면 하단에 고정 */
+    bottom: 0; /* 하단 고정 */
+  }
+  
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 10px;
+    color: #333;
+    gap: 2px; /* 아이콘과 텍스트 간격 줄이기 */
+  }
+  
+  .nav-item img {
+    width: 20px;
+    height: 20px;
+  }
+  

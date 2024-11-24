@@ -14,24 +14,6 @@
     overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
 }
 
-/* 상단 제목 */
-.header {
-    text-align: center;
-    padding-top: 5px; /* 상단 여백 줄임 */
-    margin-bottom: 5px; /* 제목과 부제목 아래 여백 */
-    position: relative; /* 선 위치 조정을 위해 추가 */
-}
-
-.header::before {
-    content: "";
-    position: absolute;
-    top: 20px; /* 선을 약간 아래로 내림 */
-    left: 0;
-    width: 100%;
-    height: 1px; /* 선 두께 */
-    background-color: #ccc; /* 선 색상 */
-}
-
 .title {
     font-size: 20px; /* 제목 크기 */
     font-weight: bold;
