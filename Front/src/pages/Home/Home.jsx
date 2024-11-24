@@ -35,6 +35,16 @@ export default function Home() {
     });
   };
 
+
+  const handleProfileClick = () => {
+    navigate('/mypage');
+  };
+
+  const handleSearchClick = () => {
+    navigate('/search'); // '/search' 경로로 이동
+  };
+  
+
   // 카테고리 데이터 배열
   const categories = [
     { id: 'korean', name: '한식', icon: korean },
