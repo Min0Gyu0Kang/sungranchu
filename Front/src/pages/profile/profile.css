@@ -109,6 +109,61 @@ body {
   text-align: right;
 }
 
+.review-star-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.star {
+  font-size: 30px;
+  color: #ccc; /* 기본 색상 */
+  cursor: pointer;
+  border-radius: 30%;
+  transition: color 0.3s;
+}
+
+.star.filled {
+  color: #ffd700; /* 채워진 별 색상 */
+}
+
+.review-section-container {
+  text-align: center;
+}
+
+.review-textarea {
+  width: 90%;
+  height: 100px;
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: none;
+}
+
+.submit-button {
+  margin-top: 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #218838;
+}
+
 @media screen and (max-width: 768px) {
   .container {
     height: 100%;
