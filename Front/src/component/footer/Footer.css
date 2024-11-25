@@ -14,6 +14,7 @@
   font-size: 10px; /* 글씨 크기 축소 */
   color: #333;
   gap: 3px; /* 아이콘과 글자 간격 줄임 */
+  cursor: pointer;
 }
 
 .nav-item img {
