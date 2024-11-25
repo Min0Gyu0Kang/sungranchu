@@ -13,6 +13,10 @@ export default function Footer () {
     navigate('/home');
   };
 
+  const handleSearchClick = () => {
+    navigate('/search');
+  };
+
   const handleProfileClick = () => {
     navigate('/mypage');
   };
@@ -29,7 +33,7 @@ export default function Footer () {
       <img src={mapIcon} alt="지도" />
       <p>지도</p>
     </div>
-    <div className="nav-item">
+    <div className="nav-item" onClick={handleSearchClick}>
       <img src={searchIcon} alt="검색" />
       <p>검색</p>
     </div>

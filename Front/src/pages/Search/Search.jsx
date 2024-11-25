@@ -1,41 +1,38 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './Search.css';
-import homeIcon from './home.png';
-import mapIcon from './map.png';
-import searchIcon from './search.png';
-import profileIcon from './profile.png';
-import { useNavigate } from 'react-router-dom';
+import arrowIcon from './arrow.png';
+import Footer from '../../component/footer/Footer';
 
 export default function Search() {
-  const navigate = useNavigate();
-
-  const handleNavigation = (path) => {
-    navigate(path); // 경로 이동
-  };
-
   const searchCategories = [
     {
-      title: '# 한국인',
-      items: [
-        { name: '이종식당', img: './restaurant1.png' },
-        { name: '장군순대국', img: './restaurant2.png' },
-      ],
+      title: '# 한식',
+      items: [{ name: '이종식당', img: './restaurant1.png' }],
     },
     {
-      title: '# 이탈리아 사람',
-      items: [
-        { name: '아늑', img: './restaurant3.png' },
-        { name: '오스테리아우노', img: './restaurant4.png' },
-      ],
+        title: '# 일식',
+        items: [{ name: '아늑', img: './restaurant1.png' }],
     },
     {
-      title: '# 멕시코 인',
-      items: [
-        { name: '타코야노스 본점', img: './restaurant5.png' },
-        { name: 'Crack Taco Shop', img: './restaurant6.png' },
-      ],
+      title: '# 중식',
+      items: [{ name: '아늑', img: './restaurant1.png' }],
+    },
+    {
+      title: '# 양식',
+      items: [{ name: '타코야노스 본점', img: './restaurant1.png' }],
     },
   ];
+
+  // 가로 스크롤을 제어할 참조
+  const categoryRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (categoryRef.current) {
+      const { scrollLeft, clientWidth } = categoryRef.current;
+      const scrollTo = direction === 'left' ? scrollLeft - clientWidth : scrollLeft + clientWidth;
+      categoryRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="search-container">
@@ -59,37 +56,29 @@ export default function Search() {
         {searchCategories.map((category, index) => (
           <div key={index} className="search-category">
             <h3 className="category-title">{category.title}</h3>
-            <div className="category-items">
-              {category.items.map((item, idx) => (
-                <div key={idx} className="category-item">
-                  <img src={item.img} alt={item.name} />
-                  <p>{item.name}</p>
-                </div>
-              ))}
+            {/* 가로 스크롤 영역 */}
+            <div className="category-items-container">
+              <div className="category-items" ref={categoryRef}>
+                {category.items.map((item, idx) => (
+                  <div key={idx} className="category-item">
+                    <img src={item.img} alt={item.name} />
+                    <p>{item.name}</p>
+                  </div>
+                ))}
+              </div>
+              <button
+                className="scroll-arrow right"
+                onClick={() => scroll('right')}
+              >
+                <img src={arrowIcon} alt="Scroll Right" />
+              </button>
             </div>
           </div>
         ))}
       </div>
 
       {/* 하단 네비게이션 */}
-      <footer className="footer">
-        <div className="nav-item" onClick={() => handleNavigation('/home')}>
-          <img src={homeIcon} alt="홈" />
-          <p>홈</p>
-        </div>
-        <div className="nav-item">
-          <img src={mapIcon} alt="지도" />
-          <p>지도</p>
-        </div>
-        <div className="nav-item">
-          <img src={searchIcon} alt="검색" />
-          <p>검색</p>
-        </div>
-        <div className="nav-item" onClick={() => handleNavigation('/mypage')}>
-          <img src={profileIcon} alt="프로필" />
-          <p>프로필</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
