@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Home.css';
-import Footer from '../../component/Footer'
+import Footer from '../../component/footer/Footer'
 
 // 카테고리 아이콘 및 추천 이미지 import
 import korean from './korean.png';
