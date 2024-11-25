@@ -5,14 +5,14 @@
     <title>회원가입</title>
     <script>
         function sendAuthCode() {
-            const email = document.getElementById("userEmail").value;
+            const email = document.getElementById("memberEmail").value;
 
             fetch("/request-sign-up", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ userEmail: email })
+                body: JSON.stringify({memberEmail: email })
             })
                 .then(response => {
                     if (response.ok) {
@@ -28,14 +28,15 @@
 <body>
 <h1>회원가입</h1>
 <form action="/user" method="POST">
-    <input name="username" placeholder="아이디" required>
+    <input name="memberName" placeholder="이름" required>
     <input name="nickname" placeholder="닉네임" required>
     <input name="password" type="password" placeholder="비밀번호" required>
-    <input id="userEmail" name="userEmail" placeholder="이메일 (예: example@g.skku.edu)" required>
+    <input id="memberEmail" name="memberEmail" placeholder="이메일 (예: example@g.skku.edu)" required>
     <button type="button" onclick="sendAuthCode()">인증번호 받기</button><br>
     <input name="authCode" placeholder="인증번호" required>
     <button type="submit">가입하기</button>
 </form>
+
 
 <!-- 에러 메시지 표시 -->
 <div style="color: red;">

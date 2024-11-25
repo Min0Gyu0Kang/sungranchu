@@ -6,9 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignUpRequestDto {
-    private String username;
+    private String memberName;
     private String nickname;
     private String password;
-    private String userEmail;
-    private String authCode; // 인증번호 필드 추가
+    private String memberEmail;
+    private String authCode;
 }
+

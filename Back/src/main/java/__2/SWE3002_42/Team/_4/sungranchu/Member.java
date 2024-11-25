@@ -1,6 +1,5 @@
 package __2.SWE3002_42.Team._4.sungranchu;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,15 +7,16 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class User {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    String memberName;
     @Column(unique = true)
-    String username;
     String nickname;
     String password;
-    String userEmail;
+
+    String memberEmail;
 
 }
