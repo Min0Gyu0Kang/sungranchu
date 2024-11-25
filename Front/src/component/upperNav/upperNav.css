@@ -1,0 +1,24 @@
+.upper-nav {
+  width: 100%;
+  height: 6%;
+  padding: 10px 0;
+  border-bottom: 3px solid #C5C5C5; /* 하단 테두리 */
+
+  display: flex; /* Flexbox 활성화 */
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 제목을 중앙에 정렬 */
+  position: relative; /* 자식 요소의 위치 설정 기준 */
+}
+
+.upper-nav img {
+  position: absolute; /* 절대 위치 설정 */
+  left: 10px; /* 왼쪽으로부터 10px 떨어짐 */
+  top: 50%; /* 부모 높이의 50% */
+  transform: translateY(-50%); /* 수직 중앙 정렬 */
+  cursor: pointer; /* 클릭 가능하게 커서 변경 (선택 사항) */
+}
+
+.nav-title {
+  font-size: 1.3em; /* 폰트 크기 조정 */
+  font-weight: bold;
+}
