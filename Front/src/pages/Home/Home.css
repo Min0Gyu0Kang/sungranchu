@@ -55,8 +55,8 @@
 }
 
 .category img {
-    width: 32px; /* 이미지 크기 줄임 */
-    height: 32px;
+    width: 34px; /* 이미지 크기 줄임 */
+    height: 34px;
     margin-bottom: 5px;
 }
 
@@ -136,7 +136,7 @@
     width: 20px; /* 아이콘 크기 줄임 */
     height: 20px;
 }
-
+  
 /* 반응형 디자인 */
 @media screen and (max-width: 768px) {
     .home-container {

@@ -75,7 +75,7 @@ export default function Home() {
 
       {/* 추천 리스트 */}
       <section className="recommendation">
-        <h3 className="recommendation-title">킹고패스</h3>
+        <h3 className="recommendation-title"> # 킹고패스</h3>
         <div className="recommendation-container">
           <div className="recommendation-item">
             <img src={restaurant1} alt="Restaurant 1" />
