@@ -11,6 +11,7 @@ import LoginForm from "./pages/Login/LoginForm";
 import SignupForm from "./pages/Login/SignupForm"; // 계정 생성 페이지
 import Home from "./pages/Home/Home.jsx";
 import Search from "./pages/Search/Search";
+import Map from "./pages/Map/Map.jsx";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/home" element={<Home />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/map" element={<Map />} />
       </Routes>
     </BrowserRouter>
   );

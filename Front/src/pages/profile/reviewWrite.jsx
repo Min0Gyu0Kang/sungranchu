@@ -38,7 +38,7 @@ export default function ReviewWrite() {
   if (!restaurant) {
     return (
       <div className="container review-write-page">
-        <UpperNav title="리뷰" />
+        <UpperNav title="리뷰" goBack={true} />
         <div className="content">
           <h3>존재하지 않는 식당입니다.</h3>
           <Footer />
