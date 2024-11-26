@@ -2,12 +2,18 @@ package __2.SWE3002_42.Team._4.sungranchu;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,6 +29,7 @@ public class UserController {
 
     @PostMapping(value = "/request-sign-up")
     public ResponseEntity<?> requestSignUp(@RequestBody SignUpRequestDto signUpRequestDto) {
+        //프론트랑 형식 맞추기 미완
         String email = signUpRequestDto.getMemberEmail();
 
         // 이메일 형식 검증
@@ -92,6 +99,30 @@ public class UserController {
         System.out.println(auth.isAuthenticated()); //로그인여부 검사가능
         System.out.println(auth.getAuthorities().contains(new SimpleGrantedAuthority("일반유저")));
         return "mypage.html";
+    }
+
+    @PostMapping("/changeNickName/{nickname}")
+    public ResponseEntity<Map<String, String>> changeNickName(Authentication auth, @PathVariable String nickname) {
+        if(memberRepository.findByNickname(nickname).isPresent()){
+            return ResponseEntity.badRequest().body(Map.of("error" ,"이미 존재하는 닉네임"));
+        }
+        memberRepository.findByNickname(auth.getName()).ifPresent(member -> {
+            member.setNickname(nickname);
+            memberRepository.save(member);
+
+            UserDetails updatedUserDetails = new User(member.getNickname(), "", auth.getAuthorities());
+            // 새로운 Authentication 객체 생성
+            UsernamePasswordAuthenticationToken newAuth =
+                    new UsernamePasswordAuthenticationToken(
+                            updatedUserDetails,
+                            "",
+                            auth.getAuthorities()
+                    );
+
+            // SecurityContext 업데이트
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        });
+        return ResponseEntity.ok().body(Map.of("changedNickname" ,nickname));
     }
 
 
