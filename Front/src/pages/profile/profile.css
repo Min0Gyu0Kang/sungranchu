@@ -24,22 +24,6 @@ body {
   overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
 }
 
-.container-achievement {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px 15px; /* 좌우 여백 줄임 */
-  background-color: #f0f9ff;
-  font-family: Arial, sans-serif;
-  height: 100vh;
-  justify-content: flex-start;
-  box-sizing: border-box;
-  max-width: 375px; /* 모바일 앱 크기 기준 */
-  gap: 20px;
-  margin: 0 auto;
-  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
-}
-
 .log-out {
   background-color: #366243; /* 초록색 */
   color: white; /* 글씨 색: 하얀색 */
@@ -63,6 +47,7 @@ body {
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .profile-left {
@@ -93,7 +78,7 @@ body {
 .profile-button {
   background-color: white;
   color: #366243;
-  border: 2px solid #366243; 
+  border: 2px solid #366243;
   border-radius: 8px;
   padding: 5px 10px;
   font-weight: bold;
@@ -224,4 +209,13 @@ body {
     padding: 16px;
     max-width: 320px; /* 작은 화면에 맞게 크기 조정 */
   }
+}
+
+/* review-page의 주소 스타일 */
+.review-page .profile-sub-text p {
+  font-size: 16px; /* 글씨 크기 변경 */
+  font-weight: normal; /* 폰트 굵기 조정 */
+  color: #333; /* 글씨 색상 변경 */
+  margin: 0; /* 여백 제거 */
+  line-height: 1.4; /* 줄 간격 조정 */
 }
