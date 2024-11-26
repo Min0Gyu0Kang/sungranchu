@@ -24,6 +24,10 @@ export default function MyPage() {
     navigate("/mypage/review");
   }
 
+  function handleLogoutClick() {
+    navigate("/");
+  }
+
   return (
     <div className="container">
       <UpperNav title="마이 페이지" goBack={goBack} />
@@ -59,7 +63,7 @@ export default function MyPage() {
         subtitle="미션을 수행해서 나만의 업적을 쌓아가요."
         onClick={handleAchievementClick}
       />
-      <button className="log-out">로그 아웃</button>
+      <button className="log-out" onClick={handleLogoutClick}>로그 아웃</button>
       <Footer />
     </div>
   );
