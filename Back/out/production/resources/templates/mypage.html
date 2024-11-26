@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<span sec:authentication="principal"></span>
+<span sec:authentication="principal.username"></span>
+<span sec:authentication="principal.authorities"></span>
+<span sec:authorize="hasAuthority('일반유저')">특정권한이 있으면 보여주쇼</span>
+<div sec:authorize="isAuthenticated()">
+    로그인된 사람만
+</div>
+</body>
+</html>
