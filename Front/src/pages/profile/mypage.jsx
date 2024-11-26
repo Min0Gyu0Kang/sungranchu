@@ -27,7 +27,9 @@ export default function MyPage () {
 
       <ItemButton imageSrc={restaurantIcon} title="방문 식당 기록 확인" subtitle="방문했던 식당을 확인할 수 있어요." />
       <ItemButton imageSrc={reviewIcon} title="리뷰 쓰기" subtitle="친구들을 위해 소중한 리뷰를 남겨요." />
-      <ItemButton imageSrc={reservationIcon} title="예약하기" subtitle="캐치테이블과 연동하여 식당을 예약해요."/>
+      <ItemButton imageSrc={reservationIcon} title="예약하기" subtitle="캐치테이블과 연동하여 식당을 예약해요." onClick={()=>{
+        alert("캐치테이블로 이동합니다.\n(사실 아직 개발중)");
+      }}/>
       <ItemButton imageSrc={achievementIcon} title="업적 확인" subtitle="미션을 수행해서 나만의 업적을 쌓아가요." onClick={handleAchievementClick}/>
       <button className="log-out">로그 아웃</button>
       <Footer />
