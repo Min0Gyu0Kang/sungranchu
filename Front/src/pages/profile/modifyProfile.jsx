@@ -5,6 +5,7 @@ import UpperNav from "../../component/upperNav/UpperNav";
 
 import baseImage from './img/basic_profile.png';
 import profileIcon from './img/profile_icon.png'
+import cameraIcon from './img/camera_icon.png'
 
 export default function ModifyPage () {
   const goBack = true;
@@ -17,7 +18,14 @@ export default function ModifyPage () {
 
       {/* Upper Area */}
       <div className="modify-upper-area">
-        <img className="profile-image-modify-page" src={profileImage} alt="Profile" />
+        <div className="profile-image-wrapper">
+          <img
+            className="profile-image-modify-page"
+            src={profileImage}
+            alt="Profile"
+          />
+          <img src={cameraIcon} className="circle-badge"></img>
+        </div>
         <div><span style={{fontSize: "26px", fontWeight: "bold"}}>{nickname}</span> <span style={{fontSize: "18px", fontWeight: "bold"}}>님, 어서오세요!</span></div>
       </div>
 

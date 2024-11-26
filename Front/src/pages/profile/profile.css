@@ -11,6 +11,7 @@ body {
 .container {
   display: flex;
   flex-direction: column;
+  gap: 5px;
   align-items: center;
   padding: 10px 15px; /* 좌우 여백 줄임 */
   background-color: #f0f9ff;
@@ -65,6 +66,15 @@ body {
   margin-bottom: 10px;
 }
 
+.profile-image-modify-page {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: inset 0 0 0 3px #366243; /* 안쪽으로 2px 테두리 */
+  margin-bottom: 10px; 
+}
+
 .profile-button {
   background-color: white;
   color: #366243;
@@ -107,6 +117,106 @@ body {
 
 .right-text {
   text-align: right;
+}
+
+.container-achievement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 15px; /* 좌우 여백 줄임 */
+  background-color: #f0f9ff;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  max-width: 375px; /* 모바일 앱 크기 기준 */
+  gap: 20px;
+  margin: 0 auto;
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
+}
+
+.achievement-upper-area {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  position: relative; 
+  padding-left: 20px;
+  padding-right: 40px;
+  padding-bottom: 30px;
+  width: 95%;
+  box-sizing: border-box;
+  background-color: #f0f9ff; /* 필요 시 배경색 지정 */
+  border-bottom: 2px solid #D7D7D7; /* 하단 경계선 */
+}
+
+.profile-image-wrapper {
+  position: relative; /* To position the circle relative to the wrapper */
+  display: inline-block; /* Ensure it wraps around the image */
+  width: fit-content;
+}
+
+.circle-badge {
+  position: absolute;
+  bottom: 10px; /* Adjust position relative to the bottom-right */
+  right: 10px; /* Adjust position relative to the bottom-right */
+  width: 50px; /* Size of the circle */
+  height: 50px;
+  background-color: #f0f9ff; /* Any color you prefer */
+  border-radius: 50%; /* Make it circular */
+  border: 6px solid #f0f9ff; /* Optional: Add a border for better visibility */
+  cursor: pointer;
+}
+
+.achievement-upper-text {
+  display: flex;
+  align-items: baseline;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px; /* 아래 텍스트와 간격 */
+}
+
+.achievement-lower-text {
+  display: flex;
+  align-items: baseline;
+  font-size: 16px;
+  color: black;
+  font-weight: bold;
+}
+
+.achievement-list-container {
+  margin-left: 16px; /* 왼쪽으로 약간 들여쓰기 */
+  width:95%;
+}
+
+.achievement-list-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px; /* 리스트와의 간격 */
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column; /* 리스트 형태 */
+  gap: 15px; /* 아이템 간 간격 */
+}
+
+.modify-upper-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  position: relative; 
+  padding: 30px;
+  padding-bottom: 50px;
+  width: 95%;
+  box-sizing: border-box;
+  background-color: #f0f9ff; /* 필요 시 배경색 지정 */
+  border-bottom: 2px solid #D7D7D7; /* 하단 경계선 */
+}
+
+.modify-list-container {
+  margin-left: 16px; /* 왼쪽으로 약간 들여쓰기 */
+  width:95%;
 }
 
 @media screen and (max-width: 768px) {
