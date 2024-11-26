@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MyPage from "./pages/profile/mypage.jsx";
 import AchievementPage from "./pages/profile/achievement.jsx";
 import ModifyPage from "./pages/profile/modifyProfile.jsx";
+import ReviewPage from "./pages/profile/review.jsx";
+import ReviewWrite from "./pages/profile/reviewWrite.jsx";
 import Login from "./pages/Login/Login"; // Login 컴포넌트 가져오기
 import LoginForm from "./pages/Login/LoginForm";
 import SignupForm from "./pages/Login/SignupForm"; // 계정 생성 페이지
