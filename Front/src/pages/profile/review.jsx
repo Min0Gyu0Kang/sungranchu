@@ -4,8 +4,8 @@ import UpperNav from "../../component/upperNav/UpperNav"; // 상단 네비게이
 import Footer from "../../component/footer/Footer"; // 하단 푸터
 import { useNavigate } from "react-router-dom";
 
-const filledStar = "/image/filled_star.svg"; // 채워진 별 SVG 경로
-const emptyStar = "/image/empty_star.svg"; // 빈 별 SVG 경로
+const filledStar = "/image/filled_star.svg";
+const emptyStar = "/image/empty_star.svg";
 
 export default function ReviewPage() {
   const navigate = useNavigate();
@@ -63,8 +63,8 @@ export default function ReviewPage() {
 
   return (
     <div className="container review-page">
-      <UpperNav title="방문 식당 목록" />
-      <div>
+      <UpperNav title="방문 식당 목록" goBack={true} />
+      <div className="scrollable-content">
         {restaurants.map((restaurant) => (
           <div key={restaurant.id} className="profile-card">
             {/* 왼쪽: 식당 이미지 */}
