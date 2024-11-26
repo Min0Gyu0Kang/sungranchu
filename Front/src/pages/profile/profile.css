@@ -119,6 +119,22 @@ body {
   text-align: right;
 }
 
+.container-achievement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 15px; /* 좌우 여백 줄임 */
+  background-color: #f0f9ff;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  max-width: 375px; /* 모바일 앱 크기 기준 */
+  gap: 20px;
+  margin: 0 auto;
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 허용 */
+}
+
 .achievement-upper-area {
   display: flex;
   flex-direction: column;
