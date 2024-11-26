@@ -20,6 +20,10 @@ function App() {
         <Route path="/loginform" element={<LoginForm />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/review" element={<ReviewPage />} />
+        <Route
+          path="/mypage/review/write/:restaurantId"
+          element={<ReviewWrite />}
+        />
         <Route path="/mypage/achievement" element={<AchievementPage />} />
         <Route path="/mypage/modify" element={<ModifyPage />} />
         <Route path="/signup" element={<SignupForm />} />
