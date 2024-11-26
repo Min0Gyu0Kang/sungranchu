@@ -36,11 +36,17 @@ export default function MyPage () {
 }
 
 function ProfileCard ({ profileImage, nickname, leftText, rightText }) {
+  const navigate = useNavigate();
+
+  function handleModifyClick () {
+    navigate('/mypage/modify');
+  }
+
   return (
     <div className="profile-card">
       <div className="profile-left">
         <img className="profile-image" src={profileImage} alt="Profile" />
-        <button className="profile-button">프로필 변경</button>
+        <button className="profile-button" onClick={handleModifyClick}>프로필 변경</button>
       </div>
       <div className="profile-right">
         <div className="profile-main-text">{nickname} 님<span style={{fontSize: '12px'}}>의 마이페이지</span></div>
