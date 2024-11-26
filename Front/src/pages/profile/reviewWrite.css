@@ -1,0 +1,83 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #f0f9ff;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  box-sizing: border-box;
+  max-width: 375px;
+  margin: 0 auto;
+}
+
+.content {
+  width: 100%;
+}
+
+.rating-section,
+.review-section {
+  margin-bottom: 100px; /* 각 섹션 간격 추가 */
+}
+
+.rating-section h3 {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.review-section h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.review-textarea {
+  width: 100%;
+  height: 300px; /* 세로 길이 */
+  padding: 10px;
+  border: 2px solid #366243;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.review-textarea::placeholder {
+  color: #bbb;
+}
+
+.text-counter {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 20px;
+  text-align: right; /* 텍스트 길이 오른쪽 정렬 */
+}
+
+.submit-button {
+  width: 100%;
+  background-color: #366243;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #218838;
+}
+
+.review-textarea {
+  line-height: 1.5;
+}

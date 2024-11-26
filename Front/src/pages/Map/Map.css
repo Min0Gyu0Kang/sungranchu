@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.map-filter {
+  position: absolute;
+  top: 60px; /* UpperNav 아래 */
+  left: 10px;
+  z-index: 10;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-button {
+  background-color: #366243;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filter-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+#map {
+  flex-grow: 1; /* 화면의 나머지 공간 차지 */
+  width: 100%;
+  height: calc(100vh - 120px); /* 상단 네비게이션 및 푸터 제외 */
+}
+
+footer {
+  height: 60px; /* Footer 높이 */
+}
