@@ -8,26 +8,39 @@ export default function MapPage() {
   const categories = ["All", "korean", "chinese", "japanese"];
 
   const locations = [
-    {
-      id: 1,
-      name: "서울24시 감자탕",
-      lat: 37.293,
-      lng: 127.202,
-      category: "korean",
-    },
+    { id: 1, name: "서울24시 감자탕", lat: 37.293, lng: 127.202, category: "korean" },
     { id: 2, name: "스타벅스", lat: 37.292, lng: 127.203, category: "All" },
-    {
-      id: 3,
-      name: "역전할머니맥주",
-      lat: 37.294,
-      lng: 127.205,
-      category: "chinese",
-    },
+    { id: 3, name: "역전할머니맥주", lat: 37.294, lng: 127.205, category: "chinese" },
   ];
 
   useEffect(() => {
+    // Dynamically load the Kakao Maps SDK
+    const script = document.createElement("script");
+    script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false";
+    script.async = true;
+    script.onload = () => {
+      // Use the kakao.maps.load to ensure the SDK is fully loaded
+      window.kakao.maps.load(() => {
+        initializeMap();
+      });
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      // Clean up the script if the component unmounts
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const initializeMap = () => {
     if (!window.kakao || !window.kakao.maps) {
-      alert("map load error");
+      alert("Map load error");
+      return;
+    }
+
+    // Check if kakao.maps.LatLng is defined before using it
+    if (typeof window.kakao.maps.LatLng !== "function") {
+      alert("kakao.maps.LatLng is not available");
       return;
     }
 
@@ -40,9 +53,9 @@ export default function MapPage() {
     const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
     const filteredLocations = selectedCategories.includes("All")
-      ? locations
-      : locations.filter((loc) =>
-          selectedCategories.some((cat) => cat === loc.category)
+        ? locations
+        : locations.filter((loc) =>
+            selectedCategories.some((cat) => cat === loc.category)
         );
 
     filteredLocations.forEach((location) => {
@@ -63,35 +76,35 @@ export default function MapPage() {
         infowindow.close();
       });
     });
-  }, [selectedCategories]);
+  };
 
   const handleCategoryChange = (category) => {
     setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((cat) => cat !== category)
-        : [...prev, category]
+        prev.includes(category)
+            ? prev.filter((cat) => cat !== category)
+            : [...prev, category]
     );
   };
 
   return (
-    <div className="container">
-      <UpperNav title="지도" />
-      <div className="map-filter">
-        <div className="filter-menu">
-          {categories.map((category) => (
-            <label key={category}>
-              <input
-                type="checkbox"
-                checked={selectedCategories.includes(category)}
-                onChange={() => handleCategoryChange(category)}
-              />
-              {category}
-            </label>
-          ))}
+      <div className="container">
+        <UpperNav title="지도" />
+        <div className="map-filter">
+          <div className="filter-menu">
+            {categories.map((category) => (
+                <label key={category}>
+                  <input
+                      type="checkbox"
+                      checked={selectedCategories.includes(category)}
+                      onChange={() => handleCategoryChange(category)}
+                  />
+                  {category}
+                </label>
+            ))}
+          </div>
         </div>
+        <div id="map" className="map"></div>
+        <Footer />
       </div>
-      <div id="map" className="map"></div>
-      <Footer />
-    </div>
   );
 }
