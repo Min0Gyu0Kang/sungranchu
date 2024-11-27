@@ -33,8 +33,14 @@
   margin-top: 10px;
 }
 
+.filter-menu label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 #map {
-  flex-grow: 1; /* 화면의 나머지 공간 차지 */
+  flex-grow: 1;
   width: 100%;
   height: calc(100vh - 120px); /* 상단 네비게이션 및 푸터 제외 */
 }
