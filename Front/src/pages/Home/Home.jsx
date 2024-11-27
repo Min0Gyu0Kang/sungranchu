@@ -17,25 +17,12 @@ import restaurant1 from "./restaurant1.png";
 import restaurant2 from "./restaurant2.png";
 
 export default function Home() {
-  // 상태 관리: 선택된 카테고리 배열
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [randomRestaurant, setRandomRestaurant] = useState(null); // 랜덤으로 선택된 식당 정보
-  const [isPopupVisible, setPopupVisible] = useState(false); // 팝업창 상태
+  const [randomRestaurant, setRandomRestaurant] = useState(null);
+  const [isPopupVisible, setPopupVisible] = useState(false);
+  const [isAnimating, setAnimating] = useState(false);
+  const [currentRestaurant, setCurrentRestaurant] = useState(null);
 
-  // 카테고리 클릭 핸들러
-  const handleCategoryClick = (categoryId) => {
-    setSelectedCategories((prevSelected) => {
-      if (prevSelected.includes(categoryId)) {
-        // 이미 선택된 경우 해제
-        return prevSelected.filter((id) => id !== categoryId);
-      } else {
-        // 선택되지 않은 경우 추가
-        return [...prevSelected, categoryId];
-      }
-    });
-  };
-
-  // 카테고리 데이터 배열
   const categories = [
     { id: "korean", name: "한식", icon: korean },
     { id: "japanese", name: "일식", icon: japanese },
@@ -49,57 +36,81 @@ export default function Home() {
     { id: "snack", name: "분식", icon: snack },
   ];
 
-  // 더미 식당 데이터
   const restaurants = [
     {
       id: 1,
       name: "아늑",
       category: "korean",
-      rating: 3.5,
+      rating: 4.5,
+      address: "서울특별시 강남구 테헤란로 123",
       image: restaurant1,
     },
     {
       id: 2,
       name: "오스테리아우노",
       category: "western",
-      rating: 3.5,
+      rating: 4.0,
+      address: "서울특별시 서초구 반포대로 45",
       image: restaurant2,
     },
     {
       id: 3,
       name: "일식당",
       category: "japanese",
-      rating: 3.5,
+      rating: 3.8,
+      address: "서울특별시 송파구 송파대로 55",
       image: restaurant1,
     },
     {
       id: 4,
       name: "중식당",
       category: "chinese",
-      rating: 3.5,
+      rating: 4.2,
+      address: "서울특별시 동대문구 천호대로 100",
       image: restaurant2,
     },
   ];
 
-  // 랜덤 추천 버튼 클릭 핸들러
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategories((prevSelected) => {
+      if (prevSelected.includes(categoryId)) {
+        return prevSelected.filter((id) => id !== categoryId);
+      } else {
+        return [...prevSelected, categoryId];
+      }
+    });
+  };
+
   const handleDrawClick = () => {
-    // 선택된 카테고리에 속한 식당 필터링
     const filteredRestaurants = restaurants.filter((restaurant) =>
       selectedCategories.includes(restaurant.category)
     );
 
     if (filteredRestaurants.length > 0) {
-      const randomIndex = Math.floor(
-        Math.random() * filteredRestaurants.length
-      );
-      setRandomRestaurant(filteredRestaurants[randomIndex]);
-      setPopupVisible(true); // 팝업창 열기
+      setPopupVisible(true);
+      setAnimating(true);
+      let animationIndex = 0;
+
+      const interval = setInterval(() => {
+        setCurrentRestaurant(
+          filteredRestaurants[animationIndex % filteredRestaurants.length]
+        );
+        animationIndex++;
+      }, 200);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        const randomIndex = Math.floor(
+          Math.random() * filteredRestaurants.length
+        );
+        setRandomRestaurant(filteredRestaurants[randomIndex]);
+        setAnimating(false);
+      }, 3000);
     } else {
       alert("선택된 카테고리에서 추천할 식당이 없습니다!");
     }
   };
 
-  // 팝업 닫기 핸들러
   const closePopup = () => {
     setPopupVisible(false);
     setRandomRestaurant(null);
@@ -107,7 +118,6 @@ export default function Home() {
 
   return (
     <div className="home-container">
-      {/* 상단 제목 */}
       <header className="header">
         <h2 className="title">랜덤 맛집 뽑기</h2>
         <p className="subtitle">
@@ -115,7 +125,6 @@ export default function Home() {
         </p>
       </header>
 
-      {/* 카테고리 아이콘 영역 */}
       <div className="category-container">
         {categories.map((category) => (
           <div
@@ -131,12 +140,11 @@ export default function Home() {
         ))}
       </div>
 
-      {/* 뽑기 버튼 */}
       <button className="draw-button" onClick={handleDrawClick}>
         뽑기
       </button>
 
-      {/* 추천 리스트 */}
+      {/* 킹고패스 섹션 */}
       <section className="recommendation">
         <h3 className="recommendation-title"> # 킹고패스</h3>
         <div className="recommendation-container">
@@ -152,53 +160,86 @@ export default function Home() {
       </section>
 
       {/* 팝업 */}
-      {isPopupVisible && randomRestaurant && (
+      {isPopupVisible && (
         <div className="popup">
           <div className="popup-content">
-            {/* 가게 이미지 */}
-            <img
-              src={randomRestaurant.image}
-              alt={randomRestaurant.name}
-              className="popup-image"
-            />
-            {/* 가게 정보 */}
-            <h3 className="popup-title">{randomRestaurant.name}</h3>
-            <p className="popup-category">{randomRestaurant.category}</p>
-            <p className="popup-rating">
-              {Array(5)
-                .fill()
-                .map((_, i) => (
-                  <img
-                    key={i}
-                    src={
-                      i < randomRestaurant.rating
-                        ? "/image/filled_star.svg" // 채워진 별
-                        : "/image/empty_star.svg" // 빈 별
-                    }
-                    alt={`${i + 1} stars`}
-                    style={{
-                      width: "20px", // 별 크기
-                      height: "20px",
-                      margin: "0 2px", // 별 간격
-                    }}
-                  />
-                ))}
-            </p>
+            {isAnimating && currentRestaurant && (
+              <>
+                <img
+                  src={currentRestaurant.image}
+                  alt={currentRestaurant.name}
+                  className="popup-image"
+                />
+                <h3 className="popup-title">{currentRestaurant.name}</h3>
+                <p className="popup-category">{currentRestaurant.category}</p>
+                <p className="popup-address">{currentRestaurant.address}</p>
+                <div className="popup-rating">
+                  {Array(5)
+                    .fill()
+                    .map((_, i) => (
+                      <img
+                        key={i}
+                        src={
+                          i < currentRestaurant.rating
+                            ? "/image/filled_star.svg"
+                            : "/image/empty_star.svg"
+                        }
+                        alt={`${i + 1} stars`}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          margin: "0 2px",
+                        }}
+                      />
+                    ))}
+                </div>
+              </>
+            )}
 
-            {/* 버튼 */}
-            <div className="popup-buttons">
-              <button className="popup-button" onClick={closePopup}>
-                확인
-              </button>
-              <button className="popup-button" onClick={handleDrawClick}>
-                다시 뽑기
-              </button>
-            </div>
+            {!isAnimating && randomRestaurant && (
+              <>
+                <img
+                  src={randomRestaurant.image}
+                  alt={randomRestaurant.name}
+                  className="popup-image"
+                />
+                <h3 className="popup-title">{randomRestaurant.name}</h3>
+                <p className="popup-category">{randomRestaurant.category}</p>
+                <p className="popup-address">{randomRestaurant.address}</p>
+                <div className="popup-rating">
+                  {Array(5)
+                    .fill()
+                    .map((_, i) => (
+                      <img
+                        key={i}
+                        src={
+                          i < randomRestaurant.rating
+                            ? "/image/filled_star.svg"
+                            : "/image/empty_star.svg"
+                        }
+                        alt={`${i + 1} stars`}
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          margin: "0 2px",
+                        }}
+                      />
+                    ))}
+                </div>
+                <div className="popup-buttons">
+                  <button className="popup-button" onClick={closePopup}>
+                    확인
+                  </button>
+                  <button className="popup-button" onClick={handleDrawClick}>
+                    다시 뽑기
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
 
-      {/* 하단 네비게이션 */}
       <Footer />
     </div>
   );
