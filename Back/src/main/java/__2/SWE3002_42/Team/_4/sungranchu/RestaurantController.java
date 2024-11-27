@@ -12,7 +12,7 @@ public class RestaurantController {
     //시험용
     @GetMapping("/rrr")
     public String rrr(){
-        return "rrr.html";
+        return "rrr";
     }
     //시험용
     @PostMapping("/addRestaurant")
