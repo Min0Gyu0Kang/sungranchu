@@ -6,6 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VisitRepository extends JpaRepository<Visit, Long> {
-    Optional<Visit> findByMember(Member member);
+    List<Visit> findByMember(Member member);
     Optional<Visit> findByMemberAndRestaurant (Member member, Restaurant restaurant);
 }

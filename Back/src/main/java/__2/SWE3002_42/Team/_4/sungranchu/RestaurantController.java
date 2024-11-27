@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.*;
 public class RestaurantController {
     private final RestaurantRepository restaurantRepository;
 
+    //시험용
     @GetMapping("/rrr")
     public String rrr(){
         return "rrr.html";
     }
-
+    //시험용
     @PostMapping("/addRestaurant")
     public String addRestaurant(@RequestParam String name, @RequestParam Double lat, @RequestParam Double lng, @RequestParam String category) {
         Restaurant restaurant = new Restaurant();
