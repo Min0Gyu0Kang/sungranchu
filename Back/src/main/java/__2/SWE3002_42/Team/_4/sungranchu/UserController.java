@@ -27,11 +27,13 @@ public class UserController {
         return "register";
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(value = "/request-sign-up")
     public ResponseEntity<?> requestSignUp(@RequestBody SignUpRequestDto signUpRequestDto) {
         //프론트랑 형식 맞추기 미완
         String email = signUpRequestDto.getMemberEmail();
-
+        System.out.println("email: " + email);
+;
         // 이메일 형식 검증
         if (!email.matches("^[a-zA-Z0-9._%+-]+@g\\.skku\\.edu$")) {
             return ResponseEntity.badRequest().body("이메일 형식이 잘못되었습니다. @g.skku.edu 도메인만 사용 가능합니다.");
@@ -42,6 +44,7 @@ public class UserController {
         return ResponseEntity.ok("인증번호가 전송되었습니다.");
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/user")
     public String registerUser(SignUpRequestDto signUpRequestDto, Model model) {
         System.out.println("DTO Values: " + signUpRequestDto);
