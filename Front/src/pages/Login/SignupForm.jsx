@@ -1,23 +1,64 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import './Login.css';
 
 export default function SignupForm() {
-  const [email, setEmail] = useState('');
+  const navigate = useNavigate();
   const [verificationSent, setVerificationSent] = useState(false);
 
-  // 이메일 입력값을 처리하는 함수
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-    setEmail(value);
+  const [formData, setFormData] = useState({
+    memberName: "",
+    nickname: "",
+    memberEmail: "",
+    authCode: "",
+    password: "",
+  });
+
+  // 폼 데이터 업데이트
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // 폼 제출 처리
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    const urlEncodedData = new URLSearchParams();
+    Object.keys(formData).forEach((key) => {
+      urlEncodedData.append(key, formData[key]);
+    });
+  
+    try {
+      const response = await fetch("http://localhost:8080/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded", // 폼 데이터로 전송
+        },
+        body: urlEncodedData.toString(),
+      });
+  
+      if (response.ok) {
+        alert("계정 생성 성공! 로그인페이지로 이동합니다.");
+        navigate("/loginform");
+      } else {
+        const errorMessage = await response.text();
+        alert(`오류 발생: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error("요청 중 오류:", error);
+      alert("요청 중 문제가 발생했습니다.");
+    }
   };
   
   function sendAuthCode() {
+    const email = formData["memberEmail"]
     fetch("http://localhost:8080/request-sign-up", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({memberEmail: email })
+        body: JSON.stringify({memberEmail: email})
     })
     .then(response => {
         if (response.ok) {
@@ -30,8 +71,9 @@ export default function SignupForm() {
   }
 
   // 인증 버튼 클릭 처리 함수
-  const handleVerificationClick = () => {
-    if (email) {
+  const handleVerificationClick = (event) => {
+    event.preventDefault();
+    if (formData["memberEmail"]) {
       // 인증번호 발송 처리 로직 
       sendAuthCode();
       alert('인증번호가 발송되었습니다.');
@@ -40,16 +82,16 @@ export default function SignupForm() {
       alert('이메일을 입력해 주세요.');
     }
   };
-
+// action="http://localhost:8080/user" method="POST"
   return (
     <div className="signup-container">
       <div className="form-container">
-        <form action="http://localhost:8080/user" method="POST">
+        <form onSubmit={handleSubmit}>
           <label htmlFor="name">이름</label>
-          <input name="memberName" type="text" id="name" className="input-field" placeholder="이름 입력" />
+          <input name="memberName" type="text" id="name" className="input-field" placeholder="이름 입력" onChange={handleChange}/>
 
-          <label name="nickname" htmlFor="nickname">닉네임</label>
-          <input type="text" id="nickname" className="input-field" placeholder="닉네임 입력" />
+          <label htmlFor="nickname">닉네임</label>
+          <input name="nickname" type="text" id="nickname" className="input-field" placeholder="닉네임 입력" onChange={handleChange}/>
 
           <label htmlFor="email">이메일</label>
           <div className="email-container">
@@ -59,8 +101,8 @@ export default function SignupForm() {
               id="email"
               className="input-field email-input"
               placeholder="이메일 입력"
-              value={email}
-              onChange={handleEmailChange}
+              value={formData["memberEmail"]}
+              onChange={handleChange}
             />
             <span className="email-suffix">@g.skku.edu</span>
             <button
@@ -79,6 +121,7 @@ export default function SignupForm() {
             id="verification"
             className="input-field"
             placeholder="인증번호 입력"
+            onChange={handleChange}
           />
 
           <label htmlFor="password">비밀번호</label>
@@ -88,6 +131,7 @@ export default function SignupForm() {
             id="password"
             className="input-field"
             placeholder="비밀번호 입력"
+            onChange={handleChange}
           />
           <button className="create-account-btn" type="submit">계정 생성하기</button>
         </form>
