@@ -17,6 +17,16 @@ export default function ModifyPage () {
   function handleModifyClick () {
     setModalOpen(true);
   }
+  function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result); // 이미지 미리보기 설정
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   return (
     <div className="container-achievement">
@@ -31,7 +41,16 @@ export default function ModifyPage () {
             src={profileImage}
             alt="Profile"
           />
-          <img src={cameraIcon} className="circle-badge"></img>
+          <label htmlFor="image-upload" >
+            <img src={cameraIcon} alt="Upload" className="circle-badge"/>
+          </label>
+          <input
+            id="image-upload"
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageUpload}
+          />
         </div>
         <div><span style={{fontSize: "26px", fontWeight: "bold"}}>{nickname}</span> <span style={{fontSize: "18px", fontWeight: "bold"}}>님, 어서오세요!</span></div>
       </div>
