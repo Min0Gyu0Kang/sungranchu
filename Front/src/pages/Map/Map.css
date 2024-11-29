@@ -4,6 +4,22 @@
   height: calc(100vh - 120px); /* 지도 높이 계산 */
 }
 
+/* 지도 헤더 */
+.map-header {
+  flex: 0 0 auto; /* 고정 높이 */
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  font-size: 12px;
+}
+
+.map-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
 .map-filter {
   position: absolute; /* 지도 내부에서 위치 고정 */
   top: 10px; /* 지도 상단에서 10px 아래 */

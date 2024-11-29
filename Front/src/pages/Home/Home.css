@@ -141,6 +141,7 @@
   display: none;
 }
 
+
 .recommendation-container {
   display: flex;
   overflow: hidden;
@@ -317,3 +318,113 @@
     transform: scale(1.1);
   }
 }
+
+/* 모달 배경 */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* 모달 내용 */
+.popup-content {
+  background: #ffffff; /* 흰색 배경 */
+  border-radius: 16px; /* 부드러운 모서리 */
+  padding: 20px;
+  width: 90%; /* 모바일 기준 크기 */
+  max-width: 400px; /* 최대 크기 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  animation: slide-down 0.3s ease-out; /* 나타나는 애니메이션 */
+}
+
+/* 모달 이미지 */
+.popup-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px; /* 부드러운 모서리 */
+  margin-bottom: 16px;
+  object-fit: cover;
+}
+
+/* 모달 제목 */
+.popup-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 8px;
+}
+
+/* 모달 주소 */
+.popup-address {
+  font-size: 14px;
+  color: #666666;
+  margin-bottom: 16px;
+}
+
+/* 서비스 리스트 */
+.popup-services {
+  list-style: none; /* 기본 리스트 스타일 제거 */
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+.popup-services li {
+  font-size: 14px;
+  color: #444444;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* 지도 링크 */
+.popup-map-link {
+  display: inline-block;
+  text-decoration: none; /* 밑줄 제거 */
+  background: #366243; /* 초록색 버튼 */
+  color: #ffffff; /* 버튼 텍스트 흰색 */
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.popup-map-link:hover {
+  background: #366243; /* hover 시 어두운 초록색 */
+}
+
+/* 닫기 버튼 */
+.popup-button {
+  background: #366243; /* 빨간색 */
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup-button:hover {
+  background: #366243; /* hover 시 어두운 빨간색 */
+}
+
+/* 모달 나타나는 애니메이션 */
+@keyframes slide-down {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
