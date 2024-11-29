@@ -43,6 +43,9 @@
   flex-grow: 1;
   width: 100%;
   height: calc(100vh - 120px); /* 상단 네비게이션 및 푸터 제외 */
+  width: 100%;
+  height: 400px; /* 충분한 높이를 설정 */
+  display: block; /* display가 block으로 설정되어야 합니다 */
 }
 
 footer {

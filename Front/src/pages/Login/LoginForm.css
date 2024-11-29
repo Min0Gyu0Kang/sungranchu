@@ -6,7 +6,7 @@
     justify-content: center; /* 중앙 배치 */
     height: 100vh;
     padding: 20px;
-    background-color: #f0f9ff;
+    background-color:#f8faf8;
     font-family: Arial, sans-serif;
     max-width: 375px; /* 모바일 앱 크기 */
     margin: 0 auto; /* 화면 중앙 정렬 */
