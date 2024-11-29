@@ -77,6 +77,7 @@ public class UserController {
         member.setNickname(signUpRequestDto.getNickname());
         member.setPassword(new BCryptPasswordEncoder().encode(signUpRequestDto.getPassword()));
         member.setMemberEmail(signUpRequestDto.getMemberEmail());
+        member.setProfile("profiles/profile.png");
         try {
             memberRepository.save(member);
         } catch (Exception ex) {
