@@ -141,7 +141,6 @@
   display: none;
 }
 
-
 .recommendation-container {
   display: flex;
   overflow: hidden;
@@ -192,25 +191,6 @@
   margin-left:10px;
 }
 
-.popup-services {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0;
-  font-size: 14px;
-  color: #333;
-}
-
-.popup-map-link {
-  display: inline-block;
-  margin-top: 10px;
-  font-size: 14px;
-  color: #007bff;
-  text-decoration: none;
-}
-
-.popup-map-link:hover {
-  text-decoration: underline;
-}
 
 /* 반응형 디자인 */
 @media screen and (max-width: 768px) {
