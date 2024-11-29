@@ -107,9 +107,9 @@ export default function MapPage() {
 
       // Filter restaurants based on selected categories
       const filteredRestaurants = selectedCategories.includes("All")
-          ? restaurantsData
-          : restaurantsData.filter((restaurant) =>
-              selectedCategories.includes(restaurant.category)
+        ? restaurantsData
+        : restaurantsData.filter((restaurant) =>
+            selectedCategories.includes(restaurant.category)
           );
 
       console.log("Filtered restaurants in category:", filteredRestaurants);
@@ -128,8 +128,8 @@ export default function MapPage() {
           return prev.filter((cat) => cat !== "All").concat(category);
         }
         return prev.includes(category)
-            ? prev.filter((cat) => cat !== category)
-            : [...prev, category];
+          ? prev.filter((cat) => cat !== category)
+          : [...prev, category];
       }
     });
   };
@@ -141,24 +141,26 @@ export default function MapPage() {
   }, [selectedCategories]);
 
   return (
-      <div className="container">
-        <UpperNav title="지도" />
+    <div className="container">
+      <UpperNav title="지도" />
+      <div className="map-container">
         <div className="map-filter">
           <div className="filter-menu">
             {categories.map((category) => (
-                <label key={category}>
-                  <input
-                      type="checkbox"
-                      checked={selectedCategories.includes(category)}
-                      onChange={() => handleCategoryChange(category)}
-                  />
-                  {category}
-                </label>
+              <label key={category}>
+                <input
+                  type="checkbox"
+                  checked={selectedCategories.includes(category)}
+                  onChange={() => handleCategoryChange(category)}
+                />
+                {category}
+              </label>
             ))}
           </div>
         </div>
-        <div id="map" className="map" ref={containerRef}></div>
-        <Footer />
+        <div id="map" ref={containerRef}></div>
       </div>
+      <Footer />
+    </div>
   );
 }

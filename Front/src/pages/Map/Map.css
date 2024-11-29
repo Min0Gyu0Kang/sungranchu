@@ -1,54 +1,38 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+.map-container {
+  position: relative; /* 부모 요소를 위치 기준으로 설정 */
+  width: 100%; /* 지도 컨테이너 너비 */
+  height: calc(100vh - 120px); /* 지도 높이 계산 */
 }
 
 .map-filter {
-  position: fixed; /* fixed로 수정하여 화면에 고정 */
-  top: 95px; /* 네비게이션 바로 아래 */
-  left: 330px; /* 화면 내부로 여백 */
-  z-index: 10; /* 지도 위에 오도록 */
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  max-width: 200px; /* 최대 너비 지정 */
-}
-
-.filter-button {
-  background-color: #366243;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 14px;
-  cursor: pointer;
+  position: absolute; /* 지도 내부에서 위치 고정 */
+  top: 10px; /* 지도 상단에서 10px 아래 */
+  left: 10px; /* 지도 좌측에서 10px 오른쪽 */
+  z-index: 10; /* 지도 위에 표시 */
+  background: white; /* 배경색 */
+  border: 1px solid #ddd; /* 테두리 */
+  border-radius: 8px; /* 둥근 모서리 */
+  padding: 10px; /* 내부 여백 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  max-width: 200px; /* 최대 너비 제한 */
+  overflow-y: auto; /* 항목이 많을 때 스크롤 가능 */
+  box-sizing: border-box; /* 패딩과 테두리를 크기 계산에 포함 */
 }
 
 .filter-menu {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  margin-top: 10px;
 }
 
 .filter-menu label {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 14px; /* 텍스트 크기 */
 }
 
 #map {
-  flex-grow: 1;
   width: 100%;
-  height: calc(100vh - 120px); /* 상단 네비게이션 및 푸터 제외 */
-  width: 100%;
-  height: 400px; /* 충분한 높이를 설정 */
-  display: block; /* display가 block으로 설정되어야 합니다 */
-}
-
-footer {
-  height: 60px; /* Footer 높이 */
+  height: 100%; /* 지도 높이와 부모 요소에 맞춤 */
 }
