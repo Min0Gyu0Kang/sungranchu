@@ -242,6 +242,8 @@
   width: 320px;
   text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  max-height: 80%;
+  overflow: hidden;
 }
 
 /* 가게 이미지 */
@@ -395,11 +397,16 @@
   justify-content: center;
 }
 
+/* 버튼 영역 */
 .kingo-popup-buttons {
   display: flex;
-  justify-content: space-between; /* 버튼을 양쪽 끝으로 배치 */
-  gap: 20px; /* 버튼 사이 간격 추가 */
-  margin-top: 20px; /* 버튼 위 간격 */
+  justify-content: space-between;
+  gap: 20px;
+  position: sticky; /* 스크롤 시 고정 */
+  bottom: 0;
+  background: #ffffff; /* 고정 영역 배경색 */
+  padding-top: 10px; /* 버튼 위 여백 */
+  margin-top: 10px; /* 스크롤 영역과 간격 */
 }
 
 .popup-map-link:hover {
@@ -420,4 +427,10 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+.popup-scrollable {
+  flex: 1; /* 스크롤 영역이 가능한 최대 크기를 차지 */
+  overflow-y: auto; /* 세로 스크롤 활성화 */
+  margin-bottom: 20px; /* 버튼과의 간격 */
 }
