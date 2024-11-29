@@ -16,12 +16,24 @@ import snack from "./snack.png";
 import restaurant1 from "./restaurant1.png";
 import restaurant2 from "./restaurant2.png";
 
+import doremifasta from "./images/doremifasta.jpg";
+import mudebohotdog from "./images/mudebohotdog.jpg";
+import jungdeunchickenfeet from "./images/jungdeunchickenfeet.jpg";
+import jeongseongtable from "./images/jeongseongtable.jpg";
+import jeongjikyubu from "./images/jeongjikyubu.jpg";
+import taekineclam from "./images/taekineclam.jpg";
+
 export default function Home() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [randomRestaurant, setRandomRestaurant] = useState(null);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [isAnimating, setAnimating] = useState(false);
   const [currentRestaurant, setCurrentRestaurant] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedKinggoPass, setSelectedKinggoPass] = useState(null);
+
+  const itemsPerPage = 4; // 한 페이지에 보여줄 아이템 수
+  const totalPages = Math.ceil(6 / itemsPerPage);
 
   const categories = [
     { id: "korean", name: "한식", icon: korean },
@@ -71,6 +83,65 @@ export default function Home() {
     },
   ];
 
+  const kinggoPassRestaurants = [
+    {
+      id: 1,
+      name: "도레미파스타",
+      image: doremifasta,
+      address: "서울특별시 강남구 강남대로 123",
+      services: ["2만원 이상 주문시 테이블 당 탄산음료 제공"],
+      mapUrl: "https://maps.google.com/?q=37.5665,126.9780",
+    },
+    {
+      id: 2,
+      name: "무대뽀핫도그",
+      image: mudebohotdog,
+      address: "서울특별시 서초구 서초대로 45",
+      services: ["결제 금액의 10% 할인"],
+      mapUrl: "https://maps.google.com/?q=37.5670,126.9820",
+    },
+    {
+      id: 3,
+      name: "정든 닭발",
+      image: jungdeunchickenfeet,
+      address: "서울특별시 송파구 송파대로 67",
+      services: ["대왕 달걀찜 제공"],
+      mapUrl: "https://maps.google.com/?q=37.5650,126.9810",
+    },
+    {
+      id: 4,
+      name: "정성식탁",
+      image: jeongseongtable,
+      address: "서울특별시 강남구 테헤란로 152",
+      services: ["테이블 당 음료수 or 에이드 제공"],
+      mapUrl: "https://maps.google.com/?q=37.5680,126.9790",
+    },
+    {
+      id: 5,
+      name: "정직유부",
+      image: jeongjikyubu,
+      address: "서울특별시 마포구 마포대로 65",
+      services: ["매장 취식 및 포장 주문시, 1인 1음료수 제공"],
+      mapUrl: "https://maps.google.com/?q=37.5645,126.9765",
+    },
+    {
+      id: 6,
+      name: "택이네 조개전골",
+      image: taekineclam,
+      address: "서울특별시 은평구 연서로 23",
+      services: ["테이블 당 음료수 1개 서비스"],
+      mapUrl: "https://maps.google.com/?q=37.5675,126.9775",
+    },
+  ];
+
+  const openKinggoPassPopup = (restaurant) => {
+    setSelectedKinggoPass(restaurant);
+  };
+
+  const closeKinggoPassPopup = () => {
+    setSelectedKinggoPass(null);
+  };
+
   const handleCategoryClick = (categoryId) => {
     setSelectedCategories((prevSelected) => {
       if (prevSelected.includes(categoryId)) {
@@ -116,6 +187,16 @@ export default function Home() {
     setRandomRestaurant(null);
   };
 
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => (prevPage + 1) % totalPages);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) =>
+      prevPage === 0 ? totalPages - 1 : prevPage - 1
+    );
+  };
+
   return (
     <div className="home-container">
       <header className="header">
@@ -147,17 +228,70 @@ export default function Home() {
       {/* 킹고패스 섹션 */}
       <section className="recommendation">
         <h3 className="recommendation-title"># 킹고패스</h3>
+
         <div className="recommendation-container">
-          <div className="recommendation-item">
-            <img src={restaurant1} alt="Restaurant 1" />
-            <p>아늑</p>
+          <button
+            className="recommendation-nav prev"
+            onClick={handlePrevPage}
+          >
+            &lt;
+          </button>
+          <div className="recommendation-list">
+            {kinggoPassRestaurants
+              .slice(
+                currentPage * itemsPerPage,
+                currentPage * itemsPerPage + itemsPerPage
+              )
+              .map((restaurant) => (
+                <div
+                  key={restaurant.id}
+                  className="recommendation-item"
+                  onClick={() => openKinggoPassPopup(restaurant)}
+                >
+                  <img src={restaurant.image} alt={restaurant.name} />
+                  <p>{restaurant.name}</p>
+                </div>
+              ))}
           </div>
-          <div className="recommendation-item">
-            <img src={restaurant2} alt="Restaurant 2" />
-            <p>오스테리아우노</p>
-          </div>
+          <button
+            className="recommendation-nav next"
+            onClick={handleNextPage}
+          >
+            &gt;
+          </button>
         </div>
       </section>
+
+      {/* 킹고패스 모달 */}
+      {selectedKinggoPass && (
+        <div className="popup">
+          <div className="popup-content">
+            <img
+              src={selectedKinggoPass.image}
+              alt={selectedKinggoPass.name}
+              className="popup-image"
+            />
+            <h3 className="popup-title">{selectedKinggoPass.name}</h3>
+            <p className="popup-address">{selectedKinggoPass.address}</p>
+            <ul className="popup-services">
+              {selectedKinggoPass.services.map((service, index) => (
+                <li key={index}>{service}</li>
+              ))}
+            </ul>
+            <a
+              href={selectedKinggoPass.mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="popup-map-link"
+            >
+              지도에서 보기
+            </a>
+            <button className="popup-button" onClick={closeKinggoPassPopup}>
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 팝업 */}
       {isPopupVisible && (
