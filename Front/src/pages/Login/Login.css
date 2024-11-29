@@ -212,7 +212,7 @@ label {
 }
 
 /* 반응형 디자인 */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 375px) {
   .login-container {
     height: 100%;
     padding: 16px;

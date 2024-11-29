@@ -52,7 +52,7 @@ export default function SignupForm() {
   };
 
   function sendAuthCode() {
-    const email = formData["memberEmail"];
+    const email = formData["memberEmail"] + "@g.skku.edu";
     fetch("http://localhost:8080/request-sign-up", {
       method: "POST",
       headers: {
