@@ -51,8 +51,8 @@ export default function Search() {
         {
             "title": "# 햄버거",
             "items": [
-                { "name": "맥도날드 수원성균관대점", "img": images('./restaurant16.png') },
-                { "name": "롯데리아 수원성대점", "img": images('./restaurant17.png') },
+                { "name": "맥도날드", "img": images('./restaurant16.png') },
+                { "name": "롯데리아", "img": images('./restaurant17.png') },
                 { "name": "사우스스트릿", "img": images('./restaurant18.png') },
             ]
         },
@@ -60,7 +60,7 @@ export default function Search() {
             "title": "# 베이커리",
             "items": [
                 { "name": "플렁드", "img": images('./restaurant19.png') },
-                { "name": "파리바게뜨 성균관대점", "img": images('./restaurant20.png') },
+                { "name": "파리바게뜨", "img": images('./restaurant20.png') },
                 { "name": "스타벅스", "img": images('./restaurant21.png') },
             ]
         }

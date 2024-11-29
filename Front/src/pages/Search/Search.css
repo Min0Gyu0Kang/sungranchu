@@ -84,62 +84,54 @@
     justify-content: flex-start;
 }
 
-/*해시태그 식당 목록 정렬*/
-.category-items {
-    display: flex; /* 수평 */
-    overflow-x: auto; /* 스크롤 가능 */
-    scroll-behavior: smooth; /* 부드럽게 */
-}
-
-/* 카테고리 카드 영역 */
+/* 개별 항목 스타일 */
 .category-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 125px; /* 카드 너비 설정 */
-    background-color: #a0bca5;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-    position: relative; /* 화살표가 카드 안에 배치될 수 있도록 */
-    flex-shrink: 0; /* Prevent the items from shrinking */
-    text-align: center; /* Center the text under each image */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* 내부 여백 제거 */
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0; /* Prevent the items from shrinking */
+  text-align: center;
+  margin: 0; /* 항목 사이의 외부 여백 제거 */
 }
 
 /* 화살표 버튼 */
 .scroll-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);  /* 수직 가운데 정렬 */
-    border: none;
-    width: 30px;  /* 화살표 크기 수정 */
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 10;
-    background-color: #a0bca5;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);  /* 수직 가운데 정렬 */
+  border: none;
+  width: 30px;  /* 화살표 크기 수정 */
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  background-color: transparent; /* 버튼 배경을 투명하게 */
+  padding: 0; /* 내부 여백 제거 */
 }
 
 /* 화살표 이미지 크기 */
 .scroll-arrow img {
-    width: 16px;
-    height: 16px;
+  width: 16px; /* 화살표 이미지의 너비 */
+  height: 16px; /* 화살표 이미지의 높이 */
 }
 
 /* 오른쪽 화살표 */
 .scroll-arrow.right {
-    right: 10px;  /* 카드의 오른쪽에 배치 */
+  right: 0.2px; /* 오른쪽에서 간격 */
 }
+
 
 
   /* 나머지 스타일 (변경 없음) */
   .category-item img {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     border-radius: 8px;
     object-fit: cover;
     margin-bottom: 5px;
@@ -147,7 +139,6 @@
   
   .category-item p {
     font-size: 14px;
-    font-weight: bold;
     text-align: center;
     margin: 0;
   }
@@ -168,7 +159,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 10px;
+    font-size: 7px;
     color: #333;
     gap: 3px;
   }
@@ -197,6 +188,44 @@
     background-color: #f0f0f0; /* 스크롤바 트랙 배경색 */
     border-radius: 10px;
   }
+
+
+  /* 카테고리 항목의 컨테이너 */
+.category-items-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  justify-content: flex-start;
+}
+
+/* 카테고리별 항목 정렬 및 스크롤 */
+.category-items {
+  display: flex;
+  overflow-x: auto; /* 가로 스크롤 가능 */
+  scroll-behavior: smooth;
+  gap: 8px; /* 아이템 간 간격 추가 */
+}
+
+/* 카테고리별 스크롤바 스타일 */
+.category-items::-webkit-scrollbar {
+  height: 6px; /* 가로 스크롤바 높이 */
+}
+
+.category-items::-webkit-scrollbar-thumb {
+  background-color: #aaa; /* 스크롤바 색상 */
+  border-radius: 10px; /* 스크롤바 모서리를 둥글게 */
+}
+
+.category-items::-webkit-scrollbar-thumb:hover {
+  background-color: #888; /* 마우스 오버 시 색상 */
+}
+
+.category-items::-webkit-scrollbar-track {
+  background-color: #f0f0f0; /* 스크롤 트랙 배경색 */
+  border-radius: 10px;
+}
+
   /* 반응형 디자인 */
   @media screen and (max-width: 768px) {
     .search-container {
@@ -214,7 +243,7 @@
     }
   
     .category-item p {
-      font-size: 12px;
+      font-size: 8px;
     }
   }
   
