@@ -3,9 +3,13 @@ import "./Map.css";
 import Footer from "../../component/footer/Footer";
 import UpperNav from "../../component/upperNav/UpperNav";
 
-export default function MapPage(){
+// Sample structure of restaurants.json data
+import restaurantsData from "./Restaurants.json"; // Adjust the path to your actual JSON file
+
+export default function MapPage() {
   const containerRef = useRef(null);
   const [selectedCategories, setSelectedCategories] = useState(["All"]);
+  const [map, setMap] = useState(null);
   const categories = [
     "All",
     "한식",
@@ -35,46 +39,73 @@ export default function MapPage(){
           level: 3, // zoom level
         };
         const map = new window.kakao.maps.Map(container, options);
+        setMap(map);
       });
     };
 
     mapScript.addEventListener('load', onLoadKakaoMap);
 
-    // Cleanup the script tag when the component unmounts
     return () => {
       mapScript.removeEventListener('load', onLoadKakaoMap);
       document.head.removeChild(mapScript);
     };
-  }, [selectedCategories]);
+  }, []);
 
-  // Function to display markers on the map
-  const displayMarker = (place, map, infowindow) => {
-    const markerPosition = new window.kakao.maps.LatLng(place.y, place.x);
-    const marker = new window.kakao.maps.Marker({
-      position: markerPosition,
-    });
+  useEffect(() => {
+    if (map) {
+      // Filter restaurants based on selected categories
+      const filteredRestaurants = selectedCategories.includes("All")
+          ? restaurantsData
+          : restaurantsData.filter(restaurant =>
+              selectedCategories.includes(restaurant.category)
+          );
 
-    marker.setMap(map);
+      const bounds = new window.kakao.maps.LatLngBounds();
+      const infowindow = new window.kakao.maps.InfoWindow({ zIndex: 1 });
 
-    // Info window for each marker
-    infowindow.setContent(`<div style="padding:5px; font-size:14px;">${place.place_name}</div>`);
+      // Display markers for each filtered restaurant
+      filteredRestaurants.forEach((place) => {
+        const markerPosition = new window.kakao.maps.LatLng(place.latitude, place.longitude);
+        const marker = new window.kakao.maps.Marker({
+          position: markerPosition,
+        });
 
-    window.kakao.maps.event.addListener(marker, "mouseover", () => {
-      infowindow.open(map, marker);
-    });
+        marker.setMap(map);
 
-    window.kakao.maps.event.addListener(marker, "mouseout", () => {
-      infowindow.close();
-    });
-  };
+        // Set up info window when marker is clicked
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+          infowindow.setContent(`<div style="padding:5px;font-size:12px;">${place.name}</div>`);
+          infowindow.open(map, marker);
+        });
+
+        bounds.extend(markerPosition);
+      });
+
+      // Adjust map bounds to fit all markers
+      map.setBounds(bounds);
+    }
+  }, [selectedCategories, map]);
 
   const handleCategoryChange = (category) => {
-    setSelectedCategories((prev) =>
-        prev.includes(category)
+    setSelectedCategories((prev) => {
+      if (category === "All") {
+        return prev.includes("All") ? [] : ["All"];
+      } else {
+        if (prev.includes("All")) {
+          return prev.filter(cat => cat !== "All").concat(category);
+        }
+        return prev.includes(category)
             ? prev.filter((cat) => cat !== category)
-            : [...prev, category]
-    );
+            : [...prev, category];
+      }
+    });
   };
+
+  useEffect(() => {
+    if (selectedCategories.length === 0) {
+      setSelectedCategories(["All"]);
+    }
+  }, [selectedCategories]);
 
   return (
       <div className="container">
