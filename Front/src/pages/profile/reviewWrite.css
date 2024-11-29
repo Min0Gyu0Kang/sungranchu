@@ -9,6 +9,8 @@
   box-sizing: border-box;
   max-width: 375px;
   margin: 0 auto;
+  font-size: 13px;
+  overflow: hidden; /* 스크롤 제거 */
 }
 
 .content {

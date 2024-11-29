@@ -5,6 +5,7 @@ import MyPage from "./pages/profile/mypage.jsx";
 import AchievementPage from "./pages/profile/achievement.jsx";
 import ModifyPage from "./pages/profile/modifyProfile.jsx";
 import ReviewPage from "./pages/profile/review.jsx";
+import VisitedPage from "./pages/profile/visited.jsx";
 import ReviewWrite from "./pages/profile/reviewWrite.jsx";
 import Login from "./pages/Login/Login"; // Login 컴포넌트 가져오기
 import LoginForm from "./pages/Login/LoginForm";
@@ -21,6 +22,7 @@ function App() {
         <Route path="/loginform" element={<LoginForm />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/review" element={<ReviewPage />} />
+        <Route path="/mypage/visited" element={<VisitedPage />} />
         <Route
           path="/mypage/review/write/:restaurantId"
           element={<ReviewWrite />}

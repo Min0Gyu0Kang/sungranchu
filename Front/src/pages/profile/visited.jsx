@@ -63,7 +63,7 @@ export default function ReviewPage() {
 
   return (
     <div className="container review-page">
-      <UpperNav title="리뷰 작성" goBack={true} />
+      <UpperNav title="방문 식당 기록" goBack={true} />
       <div className="scrollable-content">
         {restaurants.map((restaurant) => (
           <div key={restaurant.id} className="profile-card">
@@ -117,12 +117,6 @@ export default function ReviewPage() {
                   {restaurant.category}
                 </p>
               </div>
-              <button
-                className="profile-button"
-                onClick={() => handleReviewClick(restaurant.id)}
-              >
-                리뷰 작성
-              </button>
             </div>
           </div>
         ))}

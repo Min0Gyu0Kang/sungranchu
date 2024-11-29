@@ -24,13 +24,20 @@ export default function MyPage() {
     navigate("/mypage/review");
   }
 
+  function handleVisitedClick() {
+    navigate("/mypage/visited");
+  }
+
   function handleLogoutClick() {
     navigate("/");
   }
 
   return (
     <div className="container">
-      <UpperNav title="마이 페이지" goBack={goBack} />
+      <div class="page-header">
+        <h1 class="page-title">마이페이지</h1>
+      </div>
+      
       <ProfileCard
         profileImage={profileImage}
         nickname="마라엽떡"
@@ -42,20 +49,13 @@ export default function MyPage() {
         imageSrc={restaurantIcon}
         title="방문 식당 기록 확인"
         subtitle="방문했던 식당을 확인할 수 있어요."
-        onClick={handleRestaurantClick}
+        onClick={handleVisitedClick}
       />
       <ItemButton
         imageSrc={reviewIcon}
         title="리뷰 쓰기"
         subtitle="친구들을 위해 소중한 리뷰를 남겨요."
-      />
-      <ItemButton
-        imageSrc={reservationIcon}
-        title="예약하기"
-        subtitle="캐치테이블과 연동하여 식당을 예약해요."
-        onClick={() => {
-          alert("캐치테이블로 이동합니다.\n(사실 아직 개발중)");
-        }}
+        onClick={handleRestaurantClick}
       />
       <ItemButton
         imageSrc={achievementIcon}
@@ -98,3 +98,15 @@ function ProfileCard({ profileImage, nickname, leftText, rightText }) {
     </div>
   );
 }
+
+
+
+/*      <ItemButton
+        imageSrc={reservationIcon}
+        title="예약하기"
+        subtitle="캐치테이블과 연동하여 식당을 예약해요."
+        onClick={() => {
+          alert("캐치테이블로 이동합니다.\n(사실 아직 개발중)");
+        }}
+      />
+*/
