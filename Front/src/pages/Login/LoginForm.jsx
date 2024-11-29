@@ -4,7 +4,7 @@ import './LoginForm.css'; // LoginForm 전용 CSS 파일
 import characterImage from './character.png'; // 이미지 파일 import
 
 export default function LoginForm() {
-  const [email, setEmail] = useState(''); // email state 선언
+  const [nickname, setNickname] = useState(''); 
   const [password, setPassword] = useState(''); // password state 선언
   const navigate = useNavigate(); // useNavigate 훅 선언
 
@@ -18,7 +18,7 @@ export default function LoginForm() {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ email, password }), // JSON 형태로 body 전달
+        body: JSON.stringify({ nickname, password }), // JSON 형태로 body 전달
       });
 
       if (response.ok) {
@@ -46,15 +46,15 @@ export default function LoginForm() {
         <p className="speech-bubble">오늘은 어떤 맛집에 가볼까?</p>
       </div>
 
-      <form onSubmit={핸들로그인} className="form-content">
-        <label htmlFor="email">이메일</label>
+      <form onSubmit={handleLogin} className="form-content">
+        <label htmlFor="nickname">닉네임</label>
         <input
-          type="email"
-          id="email"
+          type="nickname"
+          id="nickname"
           className="input-field"
           placeholder="이메일 입력"
-          value={email} // state와 연동
-          onChange={(e) => setEmail(e.target.value)} // 입력값 변경 시 state 업데이트
+          value={nickname} // state와 연동
+          onChange={(e) => setNickname(e.target.value)} // 입력값 변경 시 state 업데이트
         />
 
         <label htmlFor="password">비밀번호</label>
