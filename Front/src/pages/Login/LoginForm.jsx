@@ -19,8 +19,8 @@ export default function LoginForm() {
       </div>
 
       <div className="form-content">
-        <label htmlFor="email">이메일</label>
-        <input type="email" id="email" className="input-field" placeholder="이메일 입력" />
+        <label htmlFor="email">닉네임</label>
+        <input type="email" id="email" className="input-field" placeholder="닉네임 입력" />
 
         <label htmlFor="password">비밀번호</label>
         <input
