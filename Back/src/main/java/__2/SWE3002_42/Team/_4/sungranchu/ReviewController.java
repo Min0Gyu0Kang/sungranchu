@@ -5,6 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,4 +43,28 @@ public class ReviewController {
         return ResponseEntity.ok("리뷰 저장 성공");
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/{restaurantId}/info")
+    public ResponseEntity<?> getRestaurantInfo(@PathVariable Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException(""));
+        List<Review> reviews = reviewRepository.findByRestaurant(restaurant);
+        List<Map<String, Object>> reviewDetails = new ArrayList<>();
+        double ratingSum = 0.0;
+
+        for(Review review : reviews){
+            ratingSum +=  review.getRating();
+            Map<String, Object> reviewDetail = new HashMap<>();
+            reviewDetail.put("rating", review.getRating());
+            reviewDetail.put("content", review.getContent());
+            reviewDetails.add(reviewDetail);
+        }
+        int cntReviews = reviews.size();
+        double avgRating = (cntReviews > 0) ? (ratingSum / cntReviews) : 0.0;
+        Map<String, Object> response = new HashMap<>();
+        response.put("restaurantName", restaurant.getName());
+        response.put("avgRating", avgRating);
+        response.put("reviews", reviewDetails);
+
+        return ResponseEntity.ok(response);
+    }
 }
