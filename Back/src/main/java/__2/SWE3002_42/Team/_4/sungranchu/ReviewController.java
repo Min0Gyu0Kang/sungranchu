@@ -16,7 +16,7 @@ public class ReviewController {
     private final RestaurantRepository restaurantRepository;
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("/mypage/review/write/{restaurantId}")
+    @PostMapping("/mypage/review/write/{restaurantId}/add")
     public ResponseEntity<?> addReview(@PathVariable Long restaurantId, @RequestParam Map<String, Object> payload, Authentication auth){
         String nickname = auth.getName();
         Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException(""));

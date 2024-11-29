@@ -3,7 +3,6 @@ package __2.SWE3002_42.Team._4.sungranchu;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -17,7 +16,7 @@ public class VisitController {
     private final MemberRepository memberRepository;
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping("/mypage/review")
+    @GetMapping("/mypage/review/info")
     public ResponseEntity<?> getUnreviewedVisits(Authentication auth) {
         String nickname = auth.getName();
         Member member = memberRepository.findByNickname(nickname)
