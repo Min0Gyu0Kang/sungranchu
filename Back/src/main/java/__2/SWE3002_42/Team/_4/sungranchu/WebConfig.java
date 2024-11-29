@@ -5,15 +5,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+// WebConfig.java
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // Allow CORS from the frontend React app (localhost:3000)
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")  // Allow React front-end from localhost:3000
-                .allowedMethods("GET", "POST", "PUT", "DELETE")  // Specify allowed HTTP methods
-                .allowedHeaders("*");  // Allow any headers
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }
+
+

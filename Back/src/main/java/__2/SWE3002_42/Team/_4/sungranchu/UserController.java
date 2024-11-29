@@ -4,15 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -97,12 +101,12 @@ public class UserController {
     }
 
     @GetMapping("/my-page")
-    public String myPage(Authentication auth) {
+    public ResponseEntity<?> myPage(Authentication auth) {
         System.out.println(auth);
         System.out.println(auth.getName()); //아이디출력가능
         System.out.println(auth.isAuthenticated()); //로그인여부 검사가능
         System.out.println(auth.getAuthorities().contains(new SimpleGrantedAuthority("일반유저")));
-        return "mypage.html";
+        return ResponseEntity.ok().body("로그인 성공!");
     }
 
     @PostMapping("/changeNickName/{nickname}")

@@ -8,7 +8,7 @@ export default function Login() {
 
   // "로그인 하기" 버튼 클릭 핸들러
   const handleLoginClick = () => {
-    navigate('/loginform'); // 두 번째 페이지로 이동
+    navigate('/login'); // 두 번째 페이지로 이동
   };
 
   // "계정 생성하기" 버튼 클릭 핸들러

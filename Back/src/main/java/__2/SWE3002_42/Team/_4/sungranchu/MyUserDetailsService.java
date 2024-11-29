@@ -18,8 +18,8 @@ import java.util.List;
 public class MyUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository; // 반드시 final로 선언
     @Override
-    public UserDetails loadUserByUsername(String nickname) throws UsernameNotFoundException {
-        var result = memberRepository.findByNickname(nickname);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var result = memberRepository.findByNickname(username);
         if (result.isEmpty()) {
             throw new UsernameNotFoundException("그런 아이디 없음");
         }
