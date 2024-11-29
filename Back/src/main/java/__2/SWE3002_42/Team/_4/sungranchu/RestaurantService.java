@@ -1,26 +1,134 @@
 package __2.SWE3002_42.Team._4.sungranchu;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import jakarta.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class RestaurantService {
 
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
 
-    // Method to save a list of restaurants
-    public void saveRestaurants(List<Restaurant> restaurants) {
+    @Autowired
+    public RestaurantService(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
+    }
+
+    // 데이터를 애플리케이션 시작 시 삽입
+    //============================== 주 의 (이 클래스 한번 실행하고 삭제할 것!!!) ===============================
+    @PostConstruct
+    public void insertData() {
+        List<Restaurant> restaurants = Arrays.asList(
+                // 한식
+                new Restaurant("히닭발", 37.29790032508252, 126.96949975216286, "한식"),
+                new Restaurant("동네빈대떡", 37.297003539404365, 126.96853016321164, "한식"),
+                new Restaurant("담은샤브칼국수", 37.29724494184355, 126.96997371532014, "한식"),
+                new Restaurant("유가네닭갈비", 37.29713003957299, 126.9698948113567, "한식"),
+                new Restaurant("백령도생바지락칼국수", 37.29759194831718, 126.97039934409842, "한식"),
+                new Restaurant("본죽&비빔밥café", 37.29742529095669, 126.97053757180737, "한식"),
+                new Restaurant("봉수육", 37.29896816335258, 126.96992791515251, "한식"),
+                new Restaurant("지장수본가전주콩나물국밥", 37.29833957690686, 126.9694854764276, "한식"),
+                new Restaurant("행복한 손칼국수", 37.29743410504683, 126.96975934739825, "한식"),
+                new Restaurant("큰맘할매순대국", 37.29900685351263, 126.97152948929948, "한식"),
+                new Restaurant("생각나는순대국본점", 37.296877340825105, 126.96833002273644, "한식"),
+                new Restaurant("알촌", 37.29749990661003, 126.97168513767609, "한식"),
+                new Restaurant("오아저씨철판", 37.297955096793196, 126.97238988221702, "한식"),
+                new Restaurant("본도시락", 37.29783362107686, 126.97310329961896, "한식"),
+                new Restaurant("성대밥상", 37.29753416376066, 126.9737152692009, "한식"),
+                new Restaurant("짱식당", 37.29758149631127, 126.97384213683358, "한식"),
+                // 일식
+                new Restaurant("하루엔소쿠", 37.29777855396326, 126.96899508325545, "일식"),
+                new Restaurant("최고당돈가스", 37.2968077006609, 126.96904905447389, "일식"),
+                new Restaurant("키와마루아지", 37.296965295411, 126.96871909393123, "일식"),
+                new Restaurant("텐사장", 37.29829683632234, 126.96971388723891, "일식"),
+                new Restaurant("포동이네", 37.29790695393368, 126.96900348952967, "일식"),
+                new Restaurant("본찌돈까스", 37.29720027190166, 126.9715188916731, "일식"),
+                new Restaurant("성대왕돈까스", 37.29724302691391, 126.97133559933798, "일식"),
+                new Restaurant("미가라멘", 37.297743221567565, 126.97183166841502, "일식"),
+                new Restaurant("오늘우동", 37.29810153826617, 126.97248851700495, "일식"),
+                new Restaurant("정직유부", 37.29800907892437, 126.97204868330189, "일식"),
+                new Restaurant("힌카쿠", 37.297986588200594, 126.97219813370148, "일식"),
+                // 중식
+                new Restaurant("탕화쿵푸마라탕", 37.29686190104012, 126.96958194041578, "중식"),
+                new Restaurant("조아마라탕", 37.2986371813203, 126.97052018100533, "중식"),
+                new Restaurant("샹츠마라", 37.297380100964034, 126.9699877597915, "중식"),
+                new Restaurant("수해복마라탕", 37.296542035059296, 126.96959052803906, "중식"),
+                new Restaurant("이둔자꿔보러우", 37.29695917837028, 126.9712454790953, "중식"),
+                // 양식
+                new Restaurant("오스테리아 우노", 37.298064685442135, 126.96919516200704, "양식"),
+                new Restaurant("59쌀피자", 37.29753568130609, 126.97059110200684, "양식"),
+                new Restaurant("롤링파스타", 37.29834220466498, 126.97097708349315, "양식"),
+                new Restaurant("아늑", 37.297594591951444, 126.97200654196551, "양식"),
+                new Restaurant("업텐브로피자", 37.297869594901975, 126.972807222775, "양식"),
+                new Restaurant("더하다피자", 37.29757900012023, 126.97276221303879, "양식"),
+                new Restaurant("몽키키친", 37.2981310775011, 126.97361073380634, "양식"),
+                new Restaurant("도레미파스타", 37.297238753982114, 126.97231119429573, "양식"),
+                new Restaurant("솔트타운피자", 37.29903649304161, 126.9730492969826, "양식"),
+                new Restaurant("정성식탁", 37.298763872015726, 126.97279844176641, "양식"),
+                new Restaurant("파치", 37.29884261279464, 126.97236700026012, "양식"),
+                // 햄버거
+                new Restaurant("맥도날드 수원성균관대점", 37.29849093838014, 126.97123361728585, "햄버거"),
+                new Restaurant("롯데리아 수원성대점", 37.29793219824455, 126.9708362580353, "햄버거"),
+                new Restaurant("사우스스트릿", 37.298168239836606, 126.96894698894006, "햄버거"),
+                new Restaurant("버거스올마이티 수원성균관대점", 37.29767936570545, 126.96871315893281, "햄버거"),
+                new Restaurant("뉴욕버거 성균관대수원캠퍼스점", 37.29631082155038, 126.97289801107006, "햄버거"),
+                // 아시안
+                new Restaurant("인더비엣", 37.29888272576408, 126.97056801999452, "아시안"),
+                new Restaurant("쌀국수공방", 37.29722512934441, 126.97184877941002, "아시안"),
+                new Restaurant("쟈스민", 37.29923245502776, 126.97299001318804, "아시안"),
+
+                // 해산물
+                new Restaurant("경기수산직판상", 37.298100587759386, 126.96866505014452, "해산물"),
+                new Restaurant("택이네 조개전골", 37.2980512189085, 126.9693840850022, "해산물"),
+                new Restaurant("은행나무 참숯풍천민물장어", 37.29924083648725, 126.97036204172592, "해산물"),
+
+                // 고기
+                new Restaurant("보리네 주먹고기", 37.297614128751334, 126.96904872405433, "고기"),
+                new Restaurant("육식", 37.29764111846112, 126.96889081265604, "고기"),
+                new Restaurant("성대곱창", 37.297960980622726, 126.96886812363888, "고기"),
+                new Restaurant("우특심 한우곱창", 37.29740009701074, 126.96891346903502, "고기"),
+                new Restaurant("성대족발보쌈", 37.29697893521201, 126.96919278514906, "고기"),
+                new Restaurant("찬이네 주먹고기", 37.29680541111746, 126.96890807452569, "고기"),
+                new Restaurant("명가양꼬치", 37.29678295819131, 126.96918722583901, "고기"),
+                new Restaurant("성대목장", 37.296945180743904, 126.96932532119334, "고기"),
+                new Restaurant("마포화곱창", 37.2966907538421, 126.96977656265953, "고기"),
+                new Restaurant("박경규항아리보쌈", 37.296992620664675, 126.96985257175166, "고기"),
+                new Restaurant("완미족발", 37.29684398824032, 126.97000489050443, "고기"),
+                new Restaurant("양뜰양꼬치", 37.29749725718637, 126.97007230255123, "고기"),
+                new Restaurant("목구멍", 37.297634684543596, 126.97014837861849, "고기"),
+                new Restaurant("돼지대첩", 37.29815515886534, 126.97065007385807, "고기"),
+                new Restaurant("태영생막창", 37.297861780832015, 126.96854390394988, "고기"),
+                new Restaurant("제주도도야지생삼겹살", 37.297817035643114, 126.96971971892116, "고기"),
+                new Restaurant("마포숯불갈비", 37.29785988809312, 126.96992835636806, "고기"),
+                new Restaurant("명륜진사갈비", 37.298952724515274, 126.97125317930782, "고기"),
+                new Restaurant("기똥찬고기", 37.2983403110638, 126.97247997101586, "고기"),
+                new Restaurant("부라보쪽갈비", 37.299385071228656, 126.97063831710618, "고기"),
+                // 베이커리
+                new Restaurant("플렁드", 37.29758468947664, 126.96845942993313, "베이커리"),
+                new Restaurant("파리바게뜨 성균관대점", 37.29908575298137, 126.97177477370992, "베이커리"),
+                new Restaurant("스타벅스", 37.29888972890464, 126.97157182887898, "베이커리"),
+                new Restaurant("와플대학 성균관대역캠퍼스", 37.29899788372136, 126.9716986746554, "베이커리"),
+                new Restaurant("투썸플레이스", 37.29674246638885, 126.96939871350877, "베이커리"),
+                new Restaurant("밀플랜 본점", 37.29728970812645, 126.96886840029012, "베이커리"),
+                new Restaurant("뚜레쥬르", 37.29852638122312, 126.96886789061344, "베이커리"),
+                new Restaurant("디올베이커리", 37.29683052892597, 126.97022764572377, "베이커리"),
+                // 분식
+                new Restaurant("보영만두 성대직영점", 37.29836235737042, 126.97048927182723, "분식"),
+                new Restaurant("이라면 본점", 37.29705383708487, 126.97145127583543, "분식"),
+                new Restaurant("먹깨비김밥", 37.298680198465206, 126.9714083658487, "분식"),
+                new Restaurant("캐치미밥카페", 37.29982918045268, 126.97207902681339, "분식"),
+                new Restaurant("동대문엽기떡볶이 수원성대점", 37.29860377853012, 126.97211331599317, "분식"),
+                new Restaurant("참바른김밥", 37.29805200152412, 126.97257594463942, "분식"),
+                new Restaurant("성대왕김말이", 37.299166575429986, 126.97066095968682, "분식"),
+                new Restaurant("떡보킹 율전본점", 37.29681424708215, 126.96825109988264, "분식")
+                // 데이터 추가
+        );
+
+
         restaurantRepository.saveAll(restaurants);
     }
 }
+
