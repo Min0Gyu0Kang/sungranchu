@@ -19,4 +19,15 @@ public class Restaurant {
     Double lat;
     Double lng;
     String category;
+
+    public Restaurant(String name, double lat, double lng, String category) {
+        this.name = name;
+        this.lat = lat;
+        this.lng = lng;
+        this.category = category;
+    }
+
+    public Restaurant() {
+
+    }
 }
