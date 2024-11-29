@@ -2,10 +2,13 @@
 .footer {
   display: flex;
   justify-content: space-around;
-  width: 100%;
+  align-items: center;
+  background-color: white;
   border-top: 1px solid #ddd;
+  padding: 10px 0;
+  bottom: 0;
+  width: 100%;
 }
-
 .nav-item {
   display: flex;
   flex-direction: column;
