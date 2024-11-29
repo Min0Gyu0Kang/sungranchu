@@ -26,7 +26,11 @@ export default function SignupForm() {
 
     const urlEncodedData = new URLSearchParams();
     Object.keys(formData).forEach((key) => {
-      urlEncodedData.append(key, formData[key]);
+      if (key == 'memberEmail') {
+        urlEncodedData.append(key, formData[key]+"@g.skku.edu");
+      } else {
+        urlEncodedData.append(key, formData[key]);
+      }
     });
 
     try {
@@ -84,11 +88,11 @@ export default function SignupForm() {
       alert("이메일을 입력해 주세요.");
     }
   };
-  // action="http://localhost:8080/user" method="POST"
+
   return (
     <div className="signup-container">
       <div className="form-container">
-        <form onSubmit={handleSubmit}>
+        <form novalidate onSubmit={handleSubmit}>
           <label htmlFor="name">이름</label>
           <input
             name="memberName"
@@ -114,7 +118,7 @@ export default function SignupForm() {
             <div className="email-input-wrapper">
               <input
                 name="memberEmail"
-                type="email"
+                type="text"
                 id="email"
                 className="input-field email-input"
                 placeholder="이메일 입력"

@@ -52,7 +52,7 @@ export default function LoginForm() {
           type="nickname"
           id="nickname"
           className="input-field"
-          placeholder="이메일 입력"
+          placeholder="닉네임 입력"
           value={nickname} // state와 연동
           onChange={(e) => setNickname(e.target.value)} // 입력값 변경 시 state 업데이트
         />
