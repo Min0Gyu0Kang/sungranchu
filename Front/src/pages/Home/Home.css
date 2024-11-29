@@ -136,11 +136,9 @@
   height: 20px;
 }
 
-
 .hidden {
   display: none;
 }
-
 
 .recommendation-container {
   display: flex;
@@ -189,9 +187,8 @@
 
 .recommendation-title {
   margin-bottom: 16px;
-  margin-left:10px;
+  margin-left: 10px;
 }
-
 
 /* 반응형 디자인 */
 @media screen and (max-width: 768px) {
@@ -385,6 +382,7 @@
 
 /* 지도 링크 */
 .popup-map-link {
+  flex: 1;
   display: inline-block;
   text-decoration: none; /* 밑줄 제거 */
   background: #366243; /* 초록색 버튼 */
@@ -394,22 +392,18 @@
   font-size: 14px;
   margin-bottom: 16px;
   transition: background-color 0.3s ease;
+  justify-content: center;
+}
+
+.kingo-popup-buttons {
+  display: flex;
+  justify-content: space-between; /* 버튼을 양쪽 끝으로 배치 */
+  gap: 20px; /* 버튼 사이 간격 추가 */
+  margin-top: 20px; /* 버튼 위 간격 */
 }
 
 .popup-map-link:hover {
   background: #366243; /* hover 시 어두운 초록색 */
-}
-
-/* 닫기 버튼 */
-.popup-button {
-  background: #366243; /* 빨간색 */
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .popup-button:hover {
@@ -427,4 +421,3 @@
     opacity: 1;
   }
 }
-

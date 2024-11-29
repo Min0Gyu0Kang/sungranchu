@@ -230,10 +230,7 @@ export default function Home() {
         <h3 className="recommendation-title"># 킹고패스</h3>
 
         <div className="recommendation-container">
-          <button
-            className="recommendation-nav prev"
-            onClick={handlePrevPage}
-          >
+          <button className="recommendation-nav prev" onClick={handlePrevPage}>
             &lt;
           </button>
           <div className="recommendation-list">
@@ -253,10 +250,7 @@ export default function Home() {
                 </div>
               ))}
           </div>
-          <button
-            className="recommendation-nav next"
-            onClick={handleNextPage}
-          >
+          <button className="recommendation-nav next" onClick={handleNextPage}>
             &gt;
           </button>
         </div>
@@ -278,17 +272,19 @@ export default function Home() {
                 <li key={index}>{service}</li>
               ))}
             </ul>
-            <a
-              href={selectedKinggoPass.mapUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="popup-map-link"
-            >
-              지도에서 보기
-            </a>
-            <button className="popup-button" onClick={closeKinggoPassPopup}>
-              닫기
-            </button>
+            <div className="kingo-popup-buttons">
+              <a
+                href={selectedKinggoPass.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="popup-map-link"
+              >
+                지도에서 보기
+              </a>
+              <button className="popup-map-link" onClick={closeKinggoPassPopup}>
+                닫기
+              </button>
+            </div>
           </div>
         </div>
       )}
