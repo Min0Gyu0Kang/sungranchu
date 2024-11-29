@@ -19,9 +19,8 @@ public class VisitController {
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/mypage/review")
     public ResponseEntity<?> getUnreviewedVisits(Authentication auth) {
-        System.out.println("wq");
-        String username = auth.getName();
-        Member member = memberRepository.findByMemberName(username)
+        String nickname = auth.getName();
+        Member member = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException(""));
 
         List<Visit> unreviewedVisits = visitRepository.findByMember(member);
