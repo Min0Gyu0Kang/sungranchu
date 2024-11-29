@@ -16,7 +16,7 @@ body {
   justify-content: space-between; /* 헤더와 버튼을 화면 위/아래로 배치 */
   height: 100vh;
   padding: 20px;
-  background-color: #f0f9ff; /* 배경 색상 */
+  background-color: #f8faf8; /* 배경 색상 */
   max-width: 375px; /* 모바일 앱 크기 (iPhone 기준) */
   margin: 0 auto; /* 화면 중앙 정렬 */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가 */
@@ -31,7 +31,7 @@ body {
   justify-content: center; /* 화면 중앙 배치 */
   height: 100vh;
   padding: 20px;
-  background-color: #f0f9ff; /* 배경 색상 */
+  background-color: #f8faf8; /* 배경 색상 */
   max-width: 375px; /* 모바일 앱 크기 (iPhone 기준) */
   margin: 0 auto; /* 화면 중앙 정렬 */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가 */
@@ -70,7 +70,7 @@ body {
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 25px;
   width: 100%;
   max-width: 320px;
 }
@@ -151,11 +151,12 @@ label {
   padding: 10px;
   border: none;
   border-radius: 8px;
-  background-color: #f2f2f2; /* 회색 배경 */
+  background-color: #d2d0d0; /* 회색 배경 */
   font-size: 12px;
   color: #333;
   box-sizing: border-box;
   outline: none;
+  margin-bottom: 20px;
 }
 
 .input-field::placeholder {
