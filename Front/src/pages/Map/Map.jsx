@@ -21,32 +21,29 @@ export default function MapPage(){
   ];
 
   useEffect(() => {
-    // Dynamically load Kakao Maps SDK
-    const script = document.createElement('script');
-    script.async = true;
-    script.defer = true;
-    script.src = '//dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false&libraries=services';
-    document.body.appendChild(script);
+    const mapScript = document.createElement('script');
+    mapScript.async = true;
+    mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false`;
 
-    script.onload = () => {
-      // Check if window.kakao and window.kakao.maps.LatLng are available
-      if (window.kakao && window.kakao.maps && window.kakao.maps.LatLng) {
-        console.log('Kakao Maps SDK loaded successfully!');
-        window.kakao.maps.load(() => {
-          const container = document.getElementById('map');
-          const options = {
-            center: new window.kakao.maps.LatLng(37.293, 127.202), // initial map center
-            level: 3, // zoom level
-          };
-          const map = new window.kakao.maps.Map(container, options);
-        });
-      } else {
-        console.log('Kakao Maps SDK is not available. Please check the SDK script loading.');
-      }
+    document.head.appendChild(mapScript);
+
+    const onLoadKakaoMap = () => {
+      window.kakao.maps.load(() => {
+        const container = document.getElementById('map');
+        const options = {
+          center: new window.kakao.maps.LatLng(37.293, 127.202), // initial map center
+          level: 3, // zoom level
+        };
+        const map = new window.kakao.maps.Map(container, options);
+      });
     };
 
+    mapScript.addEventListener('load', onLoadKakaoMap);
+
+    // Cleanup the script tag when the component unmounts
     return () => {
-      document.body.removeChild(script);
+      mapScript.removeEventListener('load', onLoadKakaoMap);
+      document.head.removeChild(mapScript);
     };
   }, [selectedCategories]);
 
