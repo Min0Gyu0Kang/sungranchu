@@ -1,93 +1,144 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Map.css";
 import Footer from "../../component/footer/Footer";
 import UpperNav from "../../component/upperNav/UpperNav";
+import restaurantsData from "./Restaurants.json"; // Adjust the path to your actual JSON file
 
 export default function MapPage() {
+  const containerRef = useRef(null);
   const [selectedCategories, setSelectedCategories] = useState(["All"]);
-  const categories = ["All", "korean", "chinese", "japanese"];
-
-  const locations = [
-    { id: 1, name: "서울24시 감자탕", lat: 37.293, lng: 127.202, category: "korean" },
-    { id: 2, name: "스타벅스", lat: 37.292, lng: 127.203, category: "All" },
-    { id: 3, name: "역전할머니맥주", lat: 37.294, lng: 127.205, category: "chinese" },
+  const [markers, setMarkers] = useState([]);
+  const [infoWindows, setInfoWindows] = useState([]);
+  const [map, setMap] = useState(null);
+  const [mapReady, setMapReady] = useState(false);
+  const categories = [
+    "All",
+    "한식",
+    "일식",
+    "중식",
+    "양식",
+    "아시안",
+    "해산물",
+    "고기",
+    "햄버거",
+    "베이커리",
+    "분식",
   ];
 
   useEffect(() => {
-    // Dynamically load the Kakao Maps SDK with autoload=true to avoid document.write issue
-    const script = document.createElement("script");
-    script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY&autoload=true";  // autoload=true로 설정
-    script.async = true;
-    script.onload = () => {
-      // Ensure the SDK is fully loaded
-      if (window.kakao && window.kakao.maps) {
-        initializeMap(); // SDK 로드 후 지도를 초기화
-      } else {
-        alert("Failed to load Kakao Maps SDK");
-      }
+    const mapScript = document.createElement("script");
+    mapScript.async = true;
+    mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false`;
+
+    document.head.appendChild(mapScript);
+
+    const onLoadKakaoMap = () => {
+      window.kakao.maps.load(() => {
+        const container = document.getElementById("map");
+        const options = {
+          center: new window.kakao.maps.LatLng(37.2937, 126.9743), // 수원캠 기준
+          level: 5, // zoom level
+        };
+        const map = new window.kakao.maps.Map(container, options);
+        setMap(map);
+        setMapReady(true);
+      });
     };
-    document.body.appendChild(script);
-  
+
+    mapScript.addEventListener("load", onLoadKakaoMap);
+
     return () => {
-      // Clean up the script if the component unmounts
-      document.body.removeChild(script);
+      mapScript.removeEventListener("load", onLoadKakaoMap);
+      document.head.removeChild(mapScript);
     };
   }, []);
-  
 
-  const initializeMap = () => {
-    if (!window.kakao || !window.kakao.maps) {
-      alert("Map load error");
-      return;
+  const closeAllInfoWindows = () => {
+    infoWindows.forEach((infowindow) => infowindow.close());
+    setInfoWindows([]);
+  };
+
+  const batchMarkers = (restaurants, batchSize) => {
+    let index = 0;
+    const interval = setInterval(() => {
+      const batch = restaurants.slice(index, index + batchSize);
+      batch.forEach((place) => {
+        const { lat, lng, name } = place;
+        const markerPosition = new window.kakao.maps.LatLng(lat, lng);
+        const marker = new window.kakao.maps.Marker({
+          position: markerPosition,
+        });
+
+        // Create InfoWindow
+        const iwContent = `<div style="padding:5px;font-size:12px;">${name}</div>`;
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: iwContent,
+          removable: true,
+        });
+
+        // Add click listener to open the InfoWindow
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          infowindow.open(map, marker);
+        });
+
+        marker.setMap(map);
+
+        // Track the InfoWindow
+        setInfoWindows((prev) => [...prev, infowindow]);
+
+        // Track the marker
+        setMarkers((prevMarkers) => [...prevMarkers, marker]);
+      });
+      index += batchSize;
+
+      if (index >= restaurants.length) {
+        clearInterval(interval);
+      }
+    }, 100);
+  };
+
+  useEffect(() => {
+    if (mapReady && map) {
+      closeAllInfoWindows();
+
+      // Clear previous markers
+      markers.forEach((marker) => marker.setMap(null));
+      setMarkers([]);
+
+      // Filter restaurants based on selected categories
+      const filteredRestaurants = selectedCategories.includes("All")
+          ? restaurantsData
+          : restaurantsData.filter((restaurant) =>
+              selectedCategories.includes(restaurant.category)
+          );
+
+      console.log("Filtered restaurants in category:", filteredRestaurants);
+
+      // Add markers for the filtered restaurants
+      batchMarkers(filteredRestaurants, 10);
     }
+  }, [selectedCategories, mapReady, map]);
 
-    // Check if kakao.maps.LatLng is defined before using it
-    if (typeof window.kakao.maps.LatLng !== "function") {
-      alert("kakao.maps.LatLng is not available");
-      return;
-    }
-
-    const mapContainer = document.getElementById("map");
-    const mapOption = {
-      center: new window.kakao.maps.LatLng(37.293, 127.202),
-      level: 3,
-    };
-
-    const map = new window.kakao.maps.Map(mapContainer, mapOption);
-
-    const filteredLocations = selectedCategories.includes("All")
-        ? locations
-        : locations.filter((loc) =>
-            selectedCategories.some((cat) => cat === loc.category)
-        );
-
-    filteredLocations.forEach((location) => {
-      const marker = new window.kakao.maps.Marker({
-        position: new window.kakao.maps.LatLng(location.lat, location.lng),
-        map: map,
-      });
-
-      const infowindow = new window.kakao.maps.InfoWindow({
-        content: `<div style="padding:5px; font-size:14px;">${location.name}</div>`,
-      });
-
-      window.kakao.maps.event.addListener(marker, "mouseover", () => {
-        infowindow.open(map, marker);
-      });
-
-      window.kakao.maps.event.addListener(marker, "mouseout", () => {
-        infowindow.close();
-      });
+  const handleCategoryChange = (category) => {
+    setSelectedCategories((prev) => {
+      if (category === "All") {
+        return prev.includes("All") ? [] : ["All"];
+      } else {
+        if (prev.includes("All")) {
+          return prev.filter((cat) => cat !== "All").concat(category);
+        }
+        return prev.includes(category)
+            ? prev.filter((cat) => cat !== category)
+            : [...prev, category];
+      }
     });
   };
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategories((prev) =>
-        prev.includes(category)
-            ? prev.filter((cat) => cat !== category)
-            : [...prev, category]
-    );
-  };
+  useEffect(() => {
+    if (selectedCategories.length === 0) {
+      setSelectedCategories(["All"]);
+    }
+  }, [selectedCategories]);
 
   return (
       <div className="container">
@@ -106,7 +157,7 @@ export default function MapPage() {
             ))}
           </div>
         </div>
-        <div id="map" className="map"></div>
+        <div id="map" className="map" ref={containerRef}></div>
         <Footer />
       </div>
   );
