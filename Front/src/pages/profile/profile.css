@@ -14,7 +14,7 @@ body {
   gap: 5px;
   align-items: center;
   padding: 10px 15px; /* 좌우 여백 줄임 */
-  background-color: #f0f9ff;
+  background-color: #f8f9fa;
   font-family: Arial, sans-serif;
   height: 100vh;
   justify-content: space-between;
@@ -124,7 +124,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 10px 15px; /* 좌우 여백 줄임 */
-  background-color: #f0f9ff;
+  background-color: #f8faf8;
   font-family: Arial, sans-serif;
   height: 100vh;
   justify-content: flex-start;

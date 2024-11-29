@@ -14,23 +14,26 @@ export default function MapPage() {
   ];
 
   useEffect(() => {
-    // Dynamically load the Kakao Maps SDK
+    // Dynamically load the Kakao Maps SDK with autoload=true to avoid document.write issue
     const script = document.createElement("script");
-    script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false";
+    script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY&autoload=true";  // autoload=true로 설정
     script.async = true;
     script.onload = () => {
-      // Use the kakao.maps.load to ensure the SDK is fully loaded
-      window.kakao.maps.load(() => {
-        initializeMap();
-      });
+      // Ensure the SDK is fully loaded
+      if (window.kakao && window.kakao.maps) {
+        initializeMap(); // SDK 로드 후 지도를 초기화
+      } else {
+        alert("Failed to load Kakao Maps SDK");
+      }
     };
     document.body.appendChild(script);
-
+  
     return () => {
       // Clean up the script if the component unmounts
       document.body.removeChild(script);
     };
   }, []);
+  
 
   const initializeMap = () => {
     if (!window.kakao || !window.kakao.maps) {
