@@ -12,16 +12,14 @@ public class RandomController {
     private final Random random = new Random();
 
     @PostMapping("/getRandom")
-    public ResponseEntity<Map<String, String>> getRandomFood(@RequestBody Map<String, String> foods) {
+    public ResponseEntity<Map<String, String>> getRandomFood(@RequestBody List<Map<String, String>> foods) {
         if (foods.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Food list is empty"));
         }
 
-        List<String> keys = new ArrayList<>(foods.keySet());
-        String randomKey = keys.get(random.nextInt(keys.size()));
-        Map<String, String> randomFoodContainer = new HashMap<>();
-        randomFoodContainer.put("id", randomKey);
+        int randomIndex = random.nextInt(foods.size());
+        Map<String, String> randomCategory = foods.get(randomIndex);
 
-        return ResponseEntity.ok(randomFoodContainer);
+        return ResponseEntity.ok(randomCategory);
     }
 }
