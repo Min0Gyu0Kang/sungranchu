@@ -142,7 +142,9 @@ export default function MapPage() {
 
   return (
     <div className="container">
-      <UpperNav title="지도" />
+      <div class="map-header">
+        <h2 class="map-title">지도</h2> 
+      </div>
       <div className="map-container">
         <div className="map-filter">
           <div className="filter-menu">
