@@ -203,6 +203,7 @@ export default function Home() {
 
       <section className="recommendation">
         <h3 className="recommendation-title"># 킹고패스</h3>
+        
         <div className="recommendation-container">
           <button
             className="recommendation-nav prev"

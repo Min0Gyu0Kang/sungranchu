@@ -161,7 +161,7 @@ body {
   right: 10px; /* Adjust position relative to the bottom-right */
   width: 50px; /* Size of the circle */
   height: 50px;
-  background-color: #f0f9ff; /* Any color you prefer */
+  background-color: #f8faf8; /* Any color you prefer */
   border-radius: 50%; /* Make it circular */
   border: 6px solid #f0f9ff; /* Optional: Add a border for better visibility */
   cursor: pointer;
@@ -210,7 +210,7 @@ body {
   padding-bottom: 50px;
   width: 95%;
   box-sizing: border-box;
-  background-color: #f0f9ff; /* 필요 시 배경색 지정 */
+  background-color: #f8faf8; /* 필요 시 배경색 지정 */
   border-bottom: 2px solid #d7d7d7; /* 하단 경계선 */
 }
 
