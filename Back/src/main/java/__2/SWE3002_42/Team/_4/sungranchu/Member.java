@@ -18,5 +18,5 @@ public class Member {
     String password;
 
     String memberEmail;
-
+    String profile;
 }
