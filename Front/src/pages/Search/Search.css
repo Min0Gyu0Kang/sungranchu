@@ -4,7 +4,8 @@
     flex-direction: column;
     align-items: center;
     padding: 10px 15px;
-    background-color: #f8f9fa;
+    /*background-color: #f8f9fa;*/
+    background-color: #f8faf8;
     height: 100vh; /* 화면 전체 높이 */
     box-sizing: border-box;
     max-width: 375px; /* 모바일 기준 */

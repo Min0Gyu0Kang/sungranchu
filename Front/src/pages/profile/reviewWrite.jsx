@@ -63,7 +63,7 @@ export default function ReviewWrite() {
 
   return (
     <div className="container review-write-page">
-      <UpperNav title="리뷰" />
+      <UpperNav title="리뷰" goBack={true}/>
       <div className="content">
         {/* 별점 섹션 */}
         <div className="rating-section">

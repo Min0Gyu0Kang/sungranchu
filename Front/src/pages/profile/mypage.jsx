@@ -63,7 +63,9 @@ export default function MyPage() {
         subtitle="미션을 수행해서 나만의 업적을 쌓아가요."
         onClick={handleAchievementClick}
       />
-      <button className="log-out" onClick={handleLogoutClick}>로그 아웃</button>
+      <button className="log-out" onClick={handleLogoutClick}>
+        로그아웃
+      </button>
       <Footer />
     </div>
   );
