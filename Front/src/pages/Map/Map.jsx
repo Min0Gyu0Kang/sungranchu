@@ -1,80 +1,73 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Map.css";
 import Footer from "../../component/footer/Footer";
 import UpperNav from "../../component/upperNav/UpperNav";
 
-export default function MapPage() {
+export default function MapPage(){
+  const containerRef = useRef(null);
   const [selectedCategories, setSelectedCategories] = useState(["All"]);
-  const categories = ["All", "korean", "chinese", "japanese"];
-
-  const locations = [
-    { id: 1, name: "서울24시 감자탕", lat: 37.293, lng: 127.202, category: "korean" },
-    { id: 2, name: "스타벅스", lat: 37.292, lng: 127.203, category: "All" },
-    { id: 3, name: "역전할머니맥주", lat: 37.294, lng: 127.205, category: "chinese" },
+  const categories = [
+    "All",
+    "한식",
+    "일식",
+    "중식",
+    "양식",
+    "아시안",
+    "해산물",
+    "고기",
+    "햄버거",
+    "베이커리",
+    "분식",
   ];
 
   useEffect(() => {
-    // Dynamically load the Kakao Maps SDK
-    const script = document.createElement("script");
-    script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false";
+    // Dynamically load Kakao Maps SDK
+    const script = document.createElement('script');
     script.async = true;
-    script.onload = () => {
-      // Use the kakao.maps.load to ensure the SDK is fully loaded
-      window.kakao.maps.load(() => {
-        initializeMap();
-      });
-    };
+    script.defer = true;
+    script.src = '//dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false&libraries=services';
     document.body.appendChild(script);
 
+    script.onload = () => {
+      // Check if window.kakao and window.kakao.maps.LatLng are available
+      if (window.kakao && window.kakao.maps && window.kakao.maps.LatLng) {
+        console.log('Kakao Maps SDK loaded successfully!');
+        window.kakao.maps.load(() => {
+          const container = document.getElementById('map');
+          const options = {
+            center: new window.kakao.maps.LatLng(37.293, 127.202), // initial map center
+            level: 3, // zoom level
+          };
+          const map = new window.kakao.maps.Map(container, options);
+        });
+      } else {
+        console.log('Kakao Maps SDK is not available. Please check the SDK script loading.');
+      }
+    };
+
     return () => {
-      // Clean up the script if the component unmounts
       document.body.removeChild(script);
     };
-  }, []);
+  }, [selectedCategories]);
 
-  const initializeMap = () => {
-    if (!window.kakao || !window.kakao.maps) {
-      alert("Map load error");
-      return;
-    }
+  // Function to display markers on the map
+  const displayMarker = (place, map, infowindow) => {
+    const markerPosition = new window.kakao.maps.LatLng(place.y, place.x);
+    const marker = new window.kakao.maps.Marker({
+      position: markerPosition,
+    });
 
-    // Check if kakao.maps.LatLng is defined before using it
-    if (typeof window.kakao.maps.LatLng !== "function") {
-      alert("kakao.maps.LatLng is not available");
-      return;
-    }
+    marker.setMap(map);
 
-    const mapContainer = document.getElementById("map");
-    const mapOption = {
-      center: new window.kakao.maps.LatLng(37.293, 127.202),
-      level: 3,
-    };
+    // Info window for each marker
+    infowindow.setContent(`<div style="padding:5px; font-size:14px;">${place.place_name}</div>`);
 
-    const map = new window.kakao.maps.Map(mapContainer, mapOption);
+    window.kakao.maps.event.addListener(marker, "mouseover", () => {
+      infowindow.open(map, marker);
+    });
 
-    const filteredLocations = selectedCategories.includes("All")
-        ? locations
-        : locations.filter((loc) =>
-            selectedCategories.some((cat) => cat === loc.category)
-        );
-
-    filteredLocations.forEach((location) => {
-      const marker = new window.kakao.maps.Marker({
-        position: new window.kakao.maps.LatLng(location.lat, location.lng),
-        map: map,
-      });
-
-      const infowindow = new window.kakao.maps.InfoWindow({
-        content: `<div style="padding:5px; font-size:14px;">${location.name}</div>`,
-      });
-
-      window.kakao.maps.event.addListener(marker, "mouseover", () => {
-        infowindow.open(map, marker);
-      });
-
-      window.kakao.maps.event.addListener(marker, "mouseout", () => {
-        infowindow.close();
-      });
+    window.kakao.maps.event.addListener(marker, "mouseout", () => {
+      infowindow.close();
     });
   };
 
@@ -103,7 +96,7 @@ export default function MapPage() {
             ))}
           </div>
         </div>
-        <div id="map" className="map"></div>
+        <div id="map" className="map" ref={containerRef}></div>
         <Footer />
       </div>
   );
