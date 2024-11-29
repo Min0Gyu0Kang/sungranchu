@@ -26,4 +26,15 @@ public class RestaurantController {
         restaurantRepository.save(restaurant);
         return "redirect:/rrr";
     }
+
+    @GetMapping("/searchRestaurant/{name}")
+    public ResponseEntity<List<Restaurant>> searchRestaurant(@PathVariable String name) {
+        List<Restaurant> restaurant = restaurantRepository.findByName(name);
+        if(restaurant.size() != 0){
+            System.out.println("찾음!" + restaurant);
+            return ResponseEntity.ok(restaurant);
+        }
+        System.out.println("못찾음");
+        return ResponseEntity.notFound().build();
+    }
 }
