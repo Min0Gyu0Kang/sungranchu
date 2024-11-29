@@ -46,20 +46,20 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/user")
-    public String registerUser(SignUpRequestDto signUpRequestDto, Model model) {
+    public ResponseEntity<String> registerUser(SignUpRequestDto signUpRequestDto, Model model) {
         System.out.println("DTO Values: " + signUpRequestDto);
+        System.out.println("인증번호: " + signUpRequestDto.getAuthCode());
 
         try {
             if (!generatedCode.equals(signUpRequestDto.getAuthCode())) {
-                model.addAttribute("errorMessage", "인증번호가 올바르지 않습니다.");
-                return "register";
+                return ResponseEntity.badRequest().body("인증번호가 올바르지 않습니다.");
             }
 
             saveMember(signUpRequestDto);
-            return "redirect:/register";
+            return ResponseEntity.ok().body("가입 완료!");
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "register";
+            return ResponseEntity.badRequest().body("알 수 없는 오류 " + e.getMessage());
         }
     }
 
