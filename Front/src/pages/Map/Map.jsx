@@ -8,8 +8,9 @@ export default function MapPage() {
   const containerRef = useRef(null);
   const [selectedCategories, setSelectedCategories] = useState(["All"]);
   const [markers, setMarkers] = useState([]);
+  const [infoWindows, setInfoWindows] = useState([]);
   const [map, setMap] = useState(null);
-  const [mapReady, setMapReady] = useState(false); // State to track map readiness
+  const [mapReady, setMapReady] = useState(false);
   const categories = [
     "All",
     "한식",
@@ -25,7 +26,7 @@ export default function MapPage() {
   ];
 
   useEffect(() => {
-    const mapScript = document.createElement('script');
+    const mapScript = document.createElement("script");
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false`;
 
@@ -33,82 +34,90 @@ export default function MapPage() {
 
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
-        const container = document.getElementById('map');
+        const container = document.getElementById("map");
         const options = {
           center: new window.kakao.maps.LatLng(37.2937, 126.9743), // 수원캠 기준
           level: 5, // zoom level
         };
         const map = new window.kakao.maps.Map(container, options);
         setMap(map);
-        setMapReady(true); // Set mapReady to true when map is initialized
+        setMapReady(true);
       });
     };
 
-    mapScript.addEventListener('load', onLoadKakaoMap);
+    mapScript.addEventListener("load", onLoadKakaoMap);
 
     return () => {
-      mapScript.removeEventListener('load', onLoadKakaoMap);
+      mapScript.removeEventListener("load", onLoadKakaoMap);
       document.head.removeChild(mapScript);
     };
   }, []);
+
+  const closeAllInfoWindows = () => {
+    infoWindows.forEach((infowindow) => infowindow.close());
+    setInfoWindows([]);
+  };
 
   const batchMarkers = (restaurants, batchSize) => {
     let index = 0;
     const interval = setInterval(() => {
       const batch = restaurants.slice(index, index + batchSize);
       batch.forEach((place) => {
-        const { lat, lng, name } = place; // Destructure lat and lng from the restaurant object
-        const markerPosition = new window.kakao.maps.LatLng(lat, lng); // Set marker position using lat/lng
+        const { lat, lng, name } = place;
+        const markerPosition = new window.kakao.maps.LatLng(lat, lng);
         const marker = new window.kakao.maps.Marker({
           position: markerPosition,
         });
 
-        // Log the marker details (lat, lng, name) to verify marker placement
-        console.log(`Adding marker for: ${name} at lat: ${lat}, lng: ${lng}`);
-
-        // Add click listener for InfoWindow
+        // Create InfoWindow
+        const iwContent = `<div style="padding:5px;font-size:12px;">${name}</div>`;
         const infowindow = new window.kakao.maps.InfoWindow({
-          content: `<div style="padding:5px;font-size:12px;">${name}</div>`,
-          zIndex: 1,
+          content: iwContent,
+          removable: true,
         });
-        window.kakao.maps.event.addListener(marker, 'click', () => {
+
+        // Add click listener to open the InfoWindow
+        window.kakao.maps.event.addListener(marker, "click", () => {
           infowindow.open(map, marker);
         });
 
-        marker.setMap(map); // Add the marker to the map
+        marker.setMap(map);
 
-        // Add marker to state (optional if needed)
-        setMarkers(prevMarkers => [...prevMarkers, marker]);
+        // Track the InfoWindow
+        setInfoWindows((prev) => [...prev, infowindow]);
+
+        // Track the marker
+        setMarkers((prevMarkers) => [...prevMarkers, marker]);
       });
       index += batchSize;
 
       if (index >= restaurants.length) {
-        clearInterval(interval); // Stop after all markers are processed
+        clearInterval(interval);
       }
-    }, 100); // Delay for batch processing
+    }, 100);
   };
-
 
   useEffect(() => {
     if (mapReady && map) {
+      closeAllInfoWindows();
+
       // Clear previous markers
-      markers.forEach(marker => marker.setMap(null));
-      setMarkers([]);  // Clear the marker state
+      markers.forEach((marker) => marker.setMap(null));
+      setMarkers([]);
 
       // Filter restaurants based on selected categories
       const filteredRestaurants = selectedCategories.includes("All")
           ? restaurantsData
-          : restaurantsData.filter(restaurant =>
+          : restaurantsData.filter((restaurant) =>
               selectedCategories.includes(restaurant.category)
           );
 
-      // 식당 정보 확인
       console.log("Filtered restaurants in category:", filteredRestaurants);
 
-      // Call the batchMarkers function to add markers in batches
-      batchMarkers(filteredRestaurants, 10); // Batch size of 10 markers at a time
+      // Add markers for the filtered restaurants
+      batchMarkers(filteredRestaurants, 10);
     }
-  }, [selectedCategories, mapReady, map]); // Run when map is ready and categories change
+  }, [selectedCategories, mapReady, map]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategories((prev) => {
@@ -116,7 +125,7 @@ export default function MapPage() {
         return prev.includes("All") ? [] : ["All"];
       } else {
         if (prev.includes("All")) {
-          return prev.filter(cat => cat !== "All").concat(category);
+          return prev.filter((cat) => cat !== "All").concat(category);
         }
         return prev.includes(category)
             ? prev.filter((cat) => cat !== category)
