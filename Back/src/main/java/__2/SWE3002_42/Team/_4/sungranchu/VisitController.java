@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 public class VisitController {
     private final VisitRepository visitRepository;
     private final MemberRepository memberRepository;
+    private final RestaurantRepository restaurantRepository;
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/mypage/review/info")
     public ResponseEntity<?> getUnreviewedVisits(Authentication auth) {
         String nickname = auth.getName();
-        Member member = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new IllegalArgumentException(""));
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException(""));
 
         List<Visit> unreviewedVisits = visitRepository.findByMember(member);
         List<Restaurant> restaurants = unreviewedVisits.stream()
@@ -28,5 +28,21 @@ public class VisitController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(restaurants);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/{restaurantId}/visit")
+    public void saveVisitHistory(@PathVariable Long restaurantId, Authentication auth){
+        String nickname = auth.getName();
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException(""));
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException(""));
+
+        Visit newVisit = new Visit();
+        newVisit.setMember(member);
+        newVisit.setRestaurant(restaurant);
+        newVisit.setHasReview(false);
+
+        visitRepository.save(newVisit);
     }
 }
