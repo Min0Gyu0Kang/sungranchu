@@ -26,8 +26,8 @@ export default function SignupForm() {
 
     const urlEncodedData = new URLSearchParams();
     Object.keys(formData).forEach((key) => {
-      if (key == 'memberEmail') {
-        urlEncodedData.append(key, formData[key]+"@g.skku.edu");
+      if (key == "memberEmail") {
+        urlEncodedData.append(key, formData[key] + "@g.skku.edu");
       } else {
         urlEncodedData.append(key, formData[key]);
       }
