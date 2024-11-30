@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(webCorsConfigurationSource())) // CORS 설정
                         .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/login", "/signup", "/public/**").permitAll() // 로그인 및 공개 경로
+                        .requestMatchers("/**").permitAll() // 로그인 및 공개 경로
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 .formLogin(formLogin -> formLogin
