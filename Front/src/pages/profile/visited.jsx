@@ -8,35 +8,55 @@ const filledStar = "/image/filled_star.svg";
 const emptyStar = "/image/empty_star.svg";
 
 export default function ReviewPage() {
-  const [visitedRestaurants, setVisitedRestaurants] = useState([]);
+  const [visitedRestaurants, setVisitedRestaurants] = useState([]); // 최종 렌더링할 데이터
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchVisitedData = async () => {
       try {
-        // 방문한 식당 데이터를 백엔드에서 가져옴
         const response = await fetch("/mypage/review/info", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // 인증 정보 포함
+          credentials: "include",
         });
 
         if (!response.ok) {
           throw new Error("Failed to fetch visited restaurant data.");
         }
 
-        const restaurants = await response.json();
+        const restaurantIds = await response.json();
+        console.log("Fetched restaurant IDs:", restaurantIds);
 
-        // 이미지 경로 수정 및 데이터 준비
-        const updatedRestaurants = restaurants.map((restaurant) => ({
+        // restaurantIds에서 id 값만 추출
+        const ids = restaurantIds.map((restaurant) => restaurant.id);
+        console.log("Extracted IDs:", ids);
+
+        // JSON 데이터를 가져와 필터링
+        const response2 = await fetch("/restaurants.json");
+        const restaurantData = await response2.json();
+
+        // 모든 items를 병합하여 하나의 배열로 만듦
+        const allRestaurants = restaurantData.flatMap(
+          (category) => category.items
+        );
+
+        // ids 배열과 매칭
+        const matchedRestaurants = allRestaurants.filter((item) =>
+          ids.includes(item.id)
+        );
+
+        // 이미지 경로 추가
+        const updatedRestaurants = matchedRestaurants.map((restaurant) => ({
           ...restaurant,
-          img: `/${restaurant.img}`, // public 디렉토리는 자동으로 매핑됨
-          reviews: restaurant.reviews || [], // 리뷰 데이터가 없는 경우 빈 배열
+          img: `/image/${restaurant.id}.png`, // id를 기반으로 이미지 경로 생성
         }));
+        console.log(`restaurant.id: {restaurant.id}`);
 
         setVisitedRestaurants(updatedRestaurants);
+
+        setVisitedRestaurants(matchedRestaurants);
       } catch (error) {
         console.error("Error fetching restaurant data:", error);
       }
@@ -55,7 +75,7 @@ export default function ReviewPage() {
             <div className="profile-left">
               <img
                 className="profile-image"
-                src={restaurant.img} // 경로는 이미 조정됨
+                src={restaurant.img} // JSON에서 불러온 이미지 경로
                 alt={restaurant.name}
               />
             </div>
