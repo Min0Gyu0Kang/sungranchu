@@ -19,6 +19,21 @@ export default function ModifyPage () {
     setNickname(userData.nickname);
   }, [userData])
 
+  useEffect(()=> {
+    const getProfileImage = async () => {
+      const response = await fetch("http://localhost:8080/mypage/profile-image", {
+        method: 'GET',
+        credentials: 'include', 
+      });
+      if (response.ok){
+        const blob = await response.blob(); // 응답을 Blob 형식으로 변환
+        const imageUrl = URL.createObjectURL(blob); // Blob에서 이미지 URL 생성
+        setProfileImage(imageUrl);
+      }
+    }
+    getProfileImage();
+  })
+
   useEffect(() => {
     const get_user = async (e) => {
       try {
@@ -50,17 +65,37 @@ export default function ModifyPage () {
   function handleModifyClick () {
     setModalOpen(true);
   }
+
   function handleImageUpload(e) {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result); // 이미지 미리보기 설정
+      const formData = new FormData();
+      formData.append("image", file); // 서버에서 @RequestParam("image")와 매핑
+  
+      const uploadImage = async () => {
+        try {
+          const response = await fetch("http://localhost:8080/mypage/modify", {
+            method: "POST",
+            body: formData, // FormData로 파일 전송
+            credentials: "include", // 인증 정보 포함
+          });
+  
+          if (response.ok) {
+            console.log("성공! ", response);
+            alert("이미지 업로드 성공!");
+          } else {
+            console.error("업로드 실패: ", response.status);
+            alert("업로드 실패: " + response.status);
+          }
+        } catch (error) {
+          console.error("에러 발생: ", error);
+          alert("서버와 통신 중 에러가 발생했습니다.");
+        }
       };
-      reader.readAsDataURL(file);
+      uploadImage();
     }
   }
-
+  
   const [newNickname, setNewNickname] = useState('');
   function handleModalInput(e){
     console.log('new nick: ', newNickname);

@@ -12,7 +12,7 @@ import baseImage from "./img/basic_profile.png";
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const profileImage = baseImage; // 로그인하고 이미지를 변경하면 이 이미지가 동적으로 변경되도록 바꿔야 함.
+  const [profileImage, setProfileImage] = useState(baseImage); // 로그인하고 이미지를 변경하면 이 이미지가 동적으로 변경되도록 바꿔야 함.
   const [nickname, setNickname] = useState('마라엽떡');
 
   const [userData, setUserData] = useState({});
@@ -21,6 +21,24 @@ export default function MyPage() {
     console.log('nick: ', userData.nickname);
     setNickname(userData.nickname);
   }, [userData])
+
+  useEffect(()=> {
+    const getProfileImage = async () => {
+      const response = await fetch("http://localhost:8080/mypage/profile-image", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', 
+      });
+      if (response.ok){
+        const blob = await response.blob(); // 응답을 Blob 형식으로 변환
+        const imageUrl = URL.createObjectURL(blob); // Blob에서 이미지 URL 생성
+        setProfileImage(imageUrl);
+      }
+    }
+    getProfileImage();
+  })
 
   useEffect(() => {
     const get_user = async (e) => {

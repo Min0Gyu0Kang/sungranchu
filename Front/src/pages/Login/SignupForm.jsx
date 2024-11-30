@@ -44,7 +44,7 @@ export default function SignupForm() {
 
       if (response.ok) {
         alert("계정 생성 성공! 로그인페이지로 이동합니다.");
-        navigate("/loginform");
+        navigate("/login");
       } else {
         const errorMessage = await response.text();
         alert(`오류 발생: ${errorMessage}`);
