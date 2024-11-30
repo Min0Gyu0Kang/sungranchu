@@ -92,7 +92,7 @@ export default function SignupForm() {
   return (
     <div className="signup-container">
       <div className="form-container">
-        <form novalidate onSubmit={handleSubmit}>
+        <form noValidate onSubmit={handleSubmit}>
           <label htmlFor="name">이름</label>
           <input
             name="memberName"
