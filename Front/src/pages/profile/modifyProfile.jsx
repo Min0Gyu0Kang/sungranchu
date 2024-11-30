@@ -13,6 +13,7 @@ export default function ModifyPage () {
   const [profileImage, setProfileImage] = useState(baseImage);
   const [nickname, setNickname] = useState('마라엽떡');
   const [userData, setUserData] = useState({});
+  const [newNickname, setNewNickname] = useState('');
 
   useEffect(() => {
     console.log('nick: ', userData.nickname);
@@ -102,10 +103,10 @@ export default function ModifyPage () {
     }
   }
   
-  const [newNickname, setNewNickname] = useState('');
   function handleModalInput(e){
     console.log('new nick: ', newNickname);
-    fetch(`http://localhost:8080//changeNickName/${newNickname}`, {
+    setNickname(newNickname);
+    fetch(`http://localhost:8080/changeNickName/${newNickname}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
