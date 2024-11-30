@@ -41,6 +41,34 @@ export default function Search() {
     }
   };
 
+  const addVisit = async () => {
+    try {
+      // 추가할 데이터 구성
+      const newVisitData = {
+        id: selectedRestaurant.id, // 레스토랑 ID
+        name: selectedRestaurant.name,
+        address: selectedRestaurant.address,
+      };
+
+      // 백엔드에 새 데이터 추가 요청
+      const response = await fetch(`/restaurants/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newVisitData),
+      });
+
+      if (!response.ok) throw new Error("Failed to add visit");
+
+      console.log("Visit added:", await response.json());
+      alert("새로운 방문 정보가 추가되었습니다.");
+    } catch (error) {
+      console.error("Error adding visit:", error);
+      alert("방문 정보를 추가하는 데 실패했습니다.");
+    }
+  };
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -142,38 +170,61 @@ export default function Search() {
   };
 
   const toggleVisitComplete = async () => {
-    if (selectedRestaurant) {
-      const updatedVisitedState = !selectedRestaurant.visited;
+    if (!selectedRestaurant) return;
 
-      try {
-        // 방문 상태를 백엔드에 업데이트
-        await fetch(`/${selectedRestaurant.id}/visit`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+    const updatedVisitedState = !selectedRestaurant.visited;
 
-        // 상태 업데이트
-        setSelectedRestaurant((prev) => ({
-          ...prev,
-          visited: updatedVisitedState,
-        }));
+    try {
+      // 방문 상태를 백엔드에 업데이트
+      const response = await fetch(`/${selectedRestaurant.id}/visit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-        setSearchCategories((prevCategories) =>
-          prevCategories.map((category) => ({
-            ...category,
-            items: category.items.map((item) =>
-              item.id === selectedRestaurant.id
-                ? { ...item, visited: updatedVisitedState }
-                : item
-            ),
-          }))
-        );
-      } catch (error) {
-        console.error("Error updating visit status:", error);
+      if (!response.ok) {
+        if (response.status === 404) {
+          // 데이터가 없는 경우 추가 요청
+          const confirmAdd = window.confirm(
+            "해당 식당 정보가 없습니다. 새로 추가하시겠습니까?"
+          );
+          if (confirmAdd) {
+            await addVisit(); // 새 데이터 추가
+            // 방문 상태 다시 저장 시도
+            await fetch(`/${selectedRestaurant.id}/visit`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+            });
+          }
+        } else {
+          throw new Error("Failed to save visit");
+        }
       }
+
+      // UI 상태 업데이트
+      setSelectedRestaurant((prev) => ({
+        ...prev,
+        visited: updatedVisitedState,
+      }));
+
+      setSearchCategories((prevCategories) =>
+        prevCategories.map((category) => ({
+          ...category,
+          items: category.items.map((item) =>
+            item.id === selectedRestaurant.id
+              ? { ...item, visited: updatedVisitedState }
+              : item
+          ),
+        }))
+      );
+    } catch (error) {
+      console.error("Error updating visit status:", error);
+      alert("방문 상태를 업데이트하는 데 실패했습니다.");
     }
   };
 
