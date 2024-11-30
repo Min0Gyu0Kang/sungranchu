@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./Search.css";
 import arrowIcon from "./arrow.png";
 import Footer from "../../component/footer/Footer";
 
 export default function Search() {
-  const [searchCategories, setSearchCategories] = useState([]); // JSON 데이터를 저장
-  const [selectedRestaurant, setSelectedRestaurant] = useState(null); // 팝업에 표시할 선택된 식당
-  const [searchQuery, setSearchQuery] = useState(""); // 검색창 입력값
-  const [error, setError] = useState(null); // 에러 상태
-  const categoryRef = useRef(null);
+  const [searchCategories, setSearchCategories] = useState([]);
+  const [originalCategories, setOriginalCategories] = useState([]); // 원본 데이터를 저장
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [error, setError] = useState(null);
 
-  // JSON 데이터 로드
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -18,9 +17,9 @@ export default function Search() {
         if (!response.ok) throw new Error("Failed to fetch JSON data");
         const data = await response.json();
 
-        // 이미지 경로 처리
         const updatedData = data.map((category) => ({
           ...category,
+          currentPage: 0, // 각 카테고리의 현재 페이지 초기화
           items: category.items.map((item) => ({
             ...item,
             img: item.img.replace("public/", "/"), // 이미지 경로 수정
@@ -28,6 +27,7 @@ export default function Search() {
         }));
 
         setSearchCategories(updatedData);
+        setOriginalCategories(updatedData); // 원본 데이터를 저장
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -36,21 +36,17 @@ export default function Search() {
     fetchCategories();
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     try {
-      const jsonResponse = await fetch("/restaurants.json");
-      if (!jsonResponse.ok) throw new Error("Failed to load JSON file");
-      const restaurantData = await jsonResponse.json();
-
-      // 검색어가 없으면 전체 데이터 보여줌
       if (searchQuery.trim() === "") {
-        setSearchCategories(restaurantData);
+        // 검색어가 비어 있으면 원본 데이터를 복원
+        setSearchCategories(originalCategories);
         setError(null);
         return;
       }
 
       // 검색어로 필터링
-      const matchedCategories = restaurantData
+      const matchedCategories = originalCategories
         .map((category) => ({
           ...category,
           items: category.items.filter((item) =>
@@ -59,32 +55,68 @@ export default function Search() {
         }))
         .filter((category) => category.items.length > 0);
 
+      if (matchedCategories.length === 0) {
+        setError("검색 결과가 없습니다.");
+      } else {
+        setError(null);
+      }
+
       setSearchCategories(matchedCategories);
-      setError(null);
     } catch (err) {
       console.error("Error during search:", err);
       setError("검색에 실패했습니다.");
-      setSearchCategories([]); // 검색 결과 초기화
+      setSearchCategories([]);
     }
   };
 
-  const scroll = (direction) => {
-    if (categoryRef.current) {
-      const { scrollLeft, clientWidth } = categoryRef.current;
-      const scrollTo =
-        direction === "left"
-          ? scrollLeft - clientWidth
-          : scrollLeft + clientWidth;
-      categoryRef.current.scrollTo({ left: scrollTo, behavior: "smooth" });
-    }
+  const handleNextPage = (categoryIndex) => {
+    setSearchCategories((prevCategories) =>
+      prevCategories.map((category, index) => {
+        if (index === categoryIndex) {
+          const totalPages = Math.ceil(category.items.length / 3);
+          return {
+            ...category,
+            currentPage: (category.currentPage + 1) % totalPages,
+          };
+        }
+        return category;
+      })
+    );
+  };
+
+  const handlePrevPage = (categoryIndex) => {
+    setSearchCategories((prevCategories) =>
+      prevCategories.map((category, index) => {
+        if (index === categoryIndex) {
+          const totalPages = Math.ceil(category.items.length / 3);
+          return {
+            ...category,
+            currentPage:
+              category.currentPage === 0
+                ? totalPages - 1
+                : category.currentPage - 1,
+          };
+        }
+        return category;
+      })
+    );
   };
 
   const openPopup = (restaurant) => {
-    setSelectedRestaurant(restaurant);
+    setSelectedRestaurant({ ...restaurant, visited: false });
   };
 
   const closePopup = () => {
     setSelectedRestaurant(null);
+  };
+
+  const toggleVisitComplete = () => {
+    if (selectedRestaurant) {
+      setSelectedRestaurant((prev) => ({
+        ...prev,
+        visited: !prev.visited,
+      }));
+    }
   };
 
   const renderStars = (rating) => {
@@ -146,24 +178,20 @@ export default function Search() {
 
       <div className="search-results">
         {error && <p className="error">{error}</p>}
-        {searchCategories.length === 0 ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh",
-            }}
-          >
-            Loading...
-          </div>
-        ) : (
-          searchCategories.map((category, index) => (
-            <div key={index} className="search-category">
-              <h3 className="category-title">{category.title}</h3>
-              <div className="category-items-container">
-                <div className="category-items" ref={categoryRef}>
-                  {category.items.map((item, idx) => (
+        {searchCategories.map((category, index) => (
+          <div key={index} className="search-category">
+            <h3 className="category-title">{category.title}</h3>
+            <div className="category-items-container">
+              <button
+                className="scroll-arrow left"
+                onClick={() => handlePrevPage(index)}
+              >
+                &lt;
+              </button>
+              <div className="category-items">
+                {category.items
+                  .slice(category.currentPage * 3, category.currentPage * 3 + 3)
+                  .map((item, idx) => (
                     <div
                       key={idx}
                       className="category-item"
@@ -173,23 +201,37 @@ export default function Search() {
                       <p>{item.name}</p>
                     </div>
                   ))}
-                </div>
-                <button
-                  className="scroll-arrow right"
-                  onClick={() => scroll("right")}
-                >
-                  <img src={arrowIcon} alt="Scroll Right" />
-                </button>
               </div>
+              <button
+                className="scroll-arrow right"
+                onClick={() => handleNextPage(index)}
+              >
+                &gt;
+              </button>
             </div>
-          ))
-        )}
+          </div>
+        ))}
       </div>
 
-      {/* 팝업 */}
       {selectedRestaurant && (
         <div className="popup">
-          <div className="popup-content">
+          <div className="popup-content" style={{ position: "relative" }}>
+            <button
+              className="popup-close-button"
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                background: "transparent",
+                border: "none",
+                fontSize: "18px",
+                color: "#888888",
+                cursor: "pointer",
+              }}
+              onClick={closePopup}
+            >
+              ✖
+            </button>
             <div className="popup-scrollable-content">
               <img
                 src={selectedRestaurant.img}
@@ -215,12 +257,26 @@ export default function Search() {
             <div className="kingo-popup-buttons">
               <button
                 className="popup-button"
-                onClick={() => window.open("https://maps.google.com", "_blank")}
+                onClick={() =>
+                  window.open(
+                    `https://maps.google.com/?q=${selectedRestaurant.address}`,
+                    "_blank"
+                  )
+                }
               >
                 지도에서 보기
               </button>
-              <button className="popup-button" onClick={closePopup}>
-                닫기
+              <button
+                className="popup-button"
+                style={{
+                  backgroundColor: selectedRestaurant.visited
+                    ? "#218838"
+                    : "#CCCCCC",
+                  color: "white",
+                }}
+                onClick={toggleVisitComplete}
+              >
+                {selectedRestaurant.visited ? "방문 완료" : "방문하지 않음"}
               </button>
             </div>
           </div>

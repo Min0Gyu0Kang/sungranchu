@@ -356,15 +356,20 @@ export default function Home() {
                 <div className="popup-rating">
                   {randomRestaurant?.averageRating ? (
                     <>
-                      {Array(5)
-                        .fill()
-                        .map((_, i) => (
+                      {Array.from({ length: 5 }).map((_, i) => {
+                        const rating = parseFloat(randomRestaurant.averageRating); // 실수형으로 변환
+                        const filled = i + 1 <= rating; // 완전히 채워진 별
+                        const halfFilled = i < rating && i + 1 > rating; // 반 채워진 별
+
+                        return (
                           <img
                             key={i}
                             src={
-                              i < Math.floor(randomRestaurant.averageRating)
-                                ? "/image/filled_star.svg"
-                                : "/image/empty_star.svg"
+                              filled
+                                ? "/image/filled_star.svg" // 완전히 채워진 별
+                                : halfFilled
+                                ? "/image/half_star.svg" // 반 채워진 별
+                                : "/image/empty_star.svg" // 빈 별
                             }
                             alt={`${i + 1} stars`}
                             style={{
@@ -373,7 +378,8 @@ export default function Home() {
                               margin: "0 2px",
                             }}
                           />
-                        ))}
+                        );
+                      })}
                       <span style={{ marginLeft: "8px", fontSize: "14px", color: "#333" }}>
                         {randomRestaurant.averageRating} / 5
                       </span>
@@ -382,6 +388,7 @@ export default function Home() {
                     <span style={{ color: "#999", fontSize: "14px" }}>별점 없음</span>
                   )}
                 </div>
+
                 
                 <div className="popup-buttons">
                   <button
