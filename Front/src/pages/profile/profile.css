@@ -180,7 +180,7 @@ body {
   height: 50px;
   background-color: #f8faf8; /* Any color you prefer */
   border-radius: 50%; /* Make it circular */
-  border: 6px solid #f0f9ff; /* Optional: Add a border for better visibility */
+  border: 6px solid #f8faf8; /* Optional: Add a border for better visibility */
   cursor: pointer;
 }
 

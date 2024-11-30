@@ -50,9 +50,9 @@ export default function ModifyPage () {
           const data = await response.json(); // JSON 데이터 읽기
           setUserData(data);
         } else if (response.status === 401) {
-          alert('로그인 실패: 잘못된 자격 증명');
+          alert('잘못된 자격 증명');
         } else {
-          console.error(`로그인 실패: ${response.status}`);
+          console.error(`실패: ${response.status}`);
         }
       } catch (error) {
         console.error('네트워크 에러 발생:', error);
