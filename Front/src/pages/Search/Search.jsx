@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import "./Search.css";
 import arrowIcon from "./arrow.png";
 import Footer from "../../component/footer/Footer";
@@ -39,39 +38,29 @@ export default function Search() {
 
   const handleSearch = async () => {
     try {
-      if (searchQuery.trim() === "") {
-        // 빈칸 입력: 전체 데이터 로드
-        const jsonResponse = await fetch("/restaurants.json");
-        if (!jsonResponse.ok) throw new Error("Failed to load JSON file");
-        const allData = await jsonResponse.json();
-        setSearchCategories(allData);
-        setError(null);
-        return;
-      }
-
-      // 검색 API 호출
-      const response = await axios.get(`/searchRestaurant/${searchQuery}`);
-      const restaurantNames = response.data.map(
-        (restaurant) => restaurant.name
-      );
-
-      // JSON 파일에서 이름으로 데이터 검색
       const jsonResponse = await fetch("/restaurants.json");
       if (!jsonResponse.ok) throw new Error("Failed to load JSON file");
       const restaurantData = await jsonResponse.json();
 
-      // 이름으로 필터링
+      // 검색어가 없으면 전체 데이터 보여줌
+      if (searchQuery.trim() === "") {
+        setSearchCategories(restaurantData);
+        setError(null);
+        return;
+      }
+
+      // 검색어로 필터링
       const matchedCategories = restaurantData
         .map((category) => ({
           ...category,
           items: category.items.filter((item) =>
-            restaurantNames.includes(item.name)
+            item.name.toLowerCase().includes(searchQuery.toLowerCase())
           ),
         }))
         .filter((category) => category.items.length > 0);
 
-      setSearchCategories(matchedCategories); // 검색 결과 업데이트
-      setError(null); // 에러 초기화
+      setSearchCategories(matchedCategories);
+      setError(null);
     } catch (err) {
       console.error("Error during search:", err);
       setError("검색에 실패했습니다.");
@@ -160,10 +149,10 @@ export default function Search() {
         {searchCategories.length === 0 ? (
           <div
             style={{
-              display: "flex", // Flexbox 활성화
-              justifyContent: "center", // 수평 가운데 정렬
-              alignItems: "center", // 수직 가운데 정렬
-              height: "100vh", // (선택) 화면 전체 높이 가운데 정렬
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
             }}
           >
             Loading...

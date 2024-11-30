@@ -159,6 +159,13 @@ export default function Home() {
     fetchCategories();
   }, []);
   
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return null; // null 반환으로 명확히 표시
+    const total = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (total / reviews.length).toFixed(1); // 소수점 한 자리까지 표시
+  };
+  
+  
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategories((prevSelected) => {
@@ -171,9 +178,8 @@ export default function Home() {
   };
   
   const handleDrawClick = () => {
-    // 필터링된 식당 리스트
     const filteredRestaurants = categoriesData
-      .filter((category) => selectedCategories.includes(category.title)) // title과 선택된 카테고리 비교
+      .filter((category) => selectedCategories.includes(category.title))
       .flatMap((category) => category.items);
   
     if (filteredRestaurants.length > 0) {
@@ -193,13 +199,20 @@ export default function Home() {
         const randomIndex = Math.floor(
           Math.random() * filteredRestaurants.length
         );
-        setRandomRestaurant(filteredRestaurants[randomIndex]);
+        const selectedRestaurant = filteredRestaurants[randomIndex];
+        selectedRestaurant.averageRating = calculateAverageRating(
+          selectedRestaurant.reviews || []
+        ); // 별점 계산
+        setRandomRestaurant(selectedRestaurant); // 식당 설정
         setAnimating(false);
       }, 3000);
     } else {
       alert("선택된 카테고리에서 추천할 식당이 없습니다!");
+      setRandomRestaurant(null); // 안전 처리
     }
   };
+  
+  
   
 
   const closePopup = () => {
@@ -325,26 +338,7 @@ export default function Home() {
                 <h3 className="popup-title">{currentRestaurant.name}</h3>
                 <p className="popup-category">{currentRestaurant.category}</p>
                 <p className="popup-address">{currentRestaurant.address}</p>
-                <div className="popup-rating">
-                  {Array(5)
-                    .fill()
-                    .map((_, i) => (
-                      <img
-                        key={i}
-                        src={
-                          i < currentRestaurant.rating
-                            ? "/image/filled_star.svg"
-                            : "/image/empty_star.svg"
-                        }
-                        alt={`${i + 1} stars`}
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          margin: "0 2px",
-                        }}
-                      />
-                    ))}
-                </div>
+
               </>
             )}
 
@@ -358,25 +352,35 @@ export default function Home() {
                 <h3 className="popup-title">{randomRestaurant.name}</h3>
                 <p className="popup-category">{randomRestaurant.category}</p>
                 <p className="popup-address">{randomRestaurant.address}</p>
+
                 <div className="popup-rating">
-                  {Array(5)
-                    .fill()
-                    .map((_, i) => (
-                      <img
-                        key={i}
-                        src={
-                          i < randomRestaurant.rating
-                            ? "/image/filled_star.svg"
-                            : "/image/empty_star.svg"
-                        }
-                        alt={`${i + 1} stars`}
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          margin: "0 2px",
-                        }}
-                      />
-                    ))}
+                  {randomRestaurant?.averageRating ? (
+                    <>
+                      {Array(5)
+                        .fill()
+                        .map((_, i) => (
+                          <img
+                            key={i}
+                            src={
+                              i < Math.floor(randomRestaurant.averageRating)
+                                ? "/image/filled_star.svg"
+                                : "/image/empty_star.svg"
+                            }
+                            alt={`${i + 1} stars`}
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                              margin: "0 2px",
+                            }}
+                          />
+                        ))}
+                      <span style={{ marginLeft: "8px", fontSize: "14px", color: "#333" }}>
+                        {randomRestaurant.averageRating} / 5
+                      </span>
+                    </>
+                  ) : (
+                    <span style={{ color: "#999", fontSize: "14px" }}>별점 없음</span>
+                  )}
                 </div>
                 
                 <div className="popup-buttons">
