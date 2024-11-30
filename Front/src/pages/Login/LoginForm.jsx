@@ -25,9 +25,17 @@ export default function LoginForm() {
         credentials: 'include', // 쿠키 포함
       });
 
+
       if (response.ok) {
-        console.log('로그인 성공');
-        navigate('/home'); // 성공 시 페이지 이동
+        const result = (response.url).split('/').slice(3).join('/');
+        console.log("result: ", result);
+        if (result == 'my-page'){
+          alert('로그인 성공! 홈 화면으로 이동합니다.');
+          navigate('/home'); // 성공 시 페이지 이동
+        } else if (result == 'fail') {
+          alert('존재하지 않는 아이디거나, 아이디와 비밀번호가 일치하지 않습니다. 다시 시도해주세요.');
+          setPassword('');
+        }
       } else if (response.status === 401) {
         alert('로그인 실패: 잘못된 자격 증명');
       } else {
