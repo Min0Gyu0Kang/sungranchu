@@ -64,7 +64,7 @@ export default function ModifyPage () {
   const [newNickname, setNewNickname] = useState('');
   function handleModalInput(e){
     console.log('new nick: ', newNickname);
-    fetch("http://localhost:8080//changeNickName/" + newNickname, {
+    fetch(`http://localhost:8080//changeNickName/${newNickname}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
