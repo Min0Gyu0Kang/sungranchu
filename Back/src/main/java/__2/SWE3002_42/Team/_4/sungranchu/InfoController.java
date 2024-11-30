@@ -21,7 +21,7 @@ import java.util.Map;
 public class InfoController {
     private final MemberRepository memberRepository;
     private final VisitRepository visitRepository;
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping("/mypage/info")
     public ResponseEntity<?> getMemberinfo(Authentication auth) {
         String nickname = auth.getName();

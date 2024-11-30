@@ -11,7 +11,40 @@ import cameraIcon from './img/camera_icon.png'
 export default function ModifyPage () {
   const goBack = true;
   const [profileImage, setProfileImage] = useState(baseImage);
-  const [nickname, setNickname] = useState("마라엽떡"); // 닉네임은 api를 이용해서 불러와야 함.
+  const [nickname, setNickname] = useState('마라엽떡');
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    console.log('nick: ', userData.nickname);
+    setNickname(userData.nickname);
+  }, [userData])
+
+  useEffect(() => {
+    const get_user = async (e) => {
+      try {
+        const response = await fetch('http://localhost:8080/mypage/info', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', 
+        });
+
+        if (response.ok) {
+          const data = await response.json(); // JSON 데이터 읽기
+          setUserData(data);
+        } else if (response.status === 401) {
+          alert('로그인 실패: 잘못된 자격 증명');
+        } else {
+          console.error(`로그인 실패: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('네트워크 에러 발생:', error);
+      }
+    }
+    get_user();
+  }, [])
+
   const [modalOpen, setModalOpen] = useState(false);
 
   function handleModifyClick () {
@@ -28,10 +61,33 @@ export default function ModifyPage () {
     }
   }
 
+  const [newNickname, setNewNickname] = useState('');
+  function handleModalInput(e){
+    console.log('new nick: ', newNickname);
+    fetch("http://localhost:8080//changeNickName/" + newNickname, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newNickname }),
+      credentials: 'include',
+    })
+    .then((response) => {
+      if (response.ok) {
+        alert("닉네임 수정이 완료되었습니다.");
+      } else {
+        return response.text().then((text) => {
+          throw new Error(text);
+        });
+      }
+    })
+    .catch((error) => alert(error.message));
+  }
+
   return (
     <div className="container-achievement">
       <UpperNav title="개인정보 수정" goBack={goBack} />
-      <InputModal isOpen={modalOpen} setModalOpen={setModalOpen} question="닉네임을 입력하세요." />
+      <InputModal isOpen={modalOpen} setModalOpen={setModalOpen} question="닉네임을 입력하세요." onSubmit={handleModalInput} setNewValue={setNewNickname}/>
 
       {/* Upper Area */}
       <div className="modify-upper-area">

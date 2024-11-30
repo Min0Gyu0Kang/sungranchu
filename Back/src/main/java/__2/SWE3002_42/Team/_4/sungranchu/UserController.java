@@ -109,6 +109,7 @@ public class UserController {
         return ResponseEntity.ok().body("로그인 성공!");
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/changeNickName/{nickname}")
     public ResponseEntity<Map<String, String>> changeNickName(Authentication auth, @PathVariable String nickname) {
         if(memberRepository.findByNickname(nickname).isPresent()){
