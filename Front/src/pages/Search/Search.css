@@ -136,9 +136,13 @@
 }
 
 .category-item p {
-  font-size: 14px;
+  font-size: 12px; /* 텍스트 크기 */
   text-align: center;
   margin: 0;
+  white-space: nowrap; /* 한 줄로 표시 */
+  overflow: hidden; /* 넘치는 텍스트 숨김 */
+  text-overflow: ellipsis; /* 말줄임표(...) 표시 */
+  width: 100px; /* 이미지 너비에 맞춤 */
 }
 
 /* 하단 네비게이션 */
