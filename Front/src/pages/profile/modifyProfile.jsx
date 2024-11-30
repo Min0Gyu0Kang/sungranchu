@@ -32,7 +32,7 @@ export default function ModifyPage () {
       }
     }
     getProfileImage();
-  })
+  }, [])
 
   useEffect(() => {
     const get_user = async (e) => {

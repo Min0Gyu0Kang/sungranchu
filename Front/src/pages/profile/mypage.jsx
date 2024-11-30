@@ -38,7 +38,7 @@ export default function MyPage() {
       }
     }
     getProfileImage();
-  })
+  }, [])
 
   useEffect(() => {
     const get_user = async (e) => {
