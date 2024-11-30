@@ -21,8 +21,9 @@ export default function Search() {
         {
           name: "히닭발",
           img: images("./restaurant1.png"),
+          lat: 37.497942,
+          lng: 127.026254,
           address: "서울특별시 강남구 히닭발길 1",
-          services: ["매콤한 닭발 요리", "무료 밑반찬 제공"],
           reviews: [
             {
               text: "매운맛이 입안을 확 사로잡는 닭발! 서비스도 훌륭해요.",
