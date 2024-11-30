@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./InputModal.css";
 
-export default function InputModal({ isOpen, onSubmit, question, setModalOpen }) {
+export default function InputModal({ isOpen, onSubmit, question, setModalOpen, setNewValue }) {
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(()=>{
+    if (setNewValue) setNewValue(inputValue);
+  },[inputValue])
 
   if (!isOpen) return null;
 
   const handleConfirm = () => {
-    // 닉네임 수정 api 불러야함.
+    if (onSubmit) onSubmit();
     setInputValue("");
     setModalOpen(false);
   };

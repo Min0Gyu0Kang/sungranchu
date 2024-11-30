@@ -1,4 +1,4 @@
-import React from "react";
+import {React, useEffect, useState} from "react";
 import "./profile.css";
 import Footer from "../../component/footer/Footer";
 import ItemButton from "../../component/itemButton/ItemButton";
@@ -7,14 +7,46 @@ import { useNavigate } from "react-router-dom";
 
 import restaurantIcon from "./img/restaurant_icon.png";
 import reviewIcon from "./img/review_icon.png";
-import reservationIcon from "./img/reservation_icon.png";
 import achievementIcon from "./img/achievement_icon.png";
 import baseImage from "./img/basic_profile.png";
 
 export default function MyPage() {
   const navigate = useNavigate();
   const profileImage = baseImage; // 로그인하고 이미지를 변경하면 이 이미지가 동적으로 변경되도록 바꿔야 함.
-  const goBack = false;
+  const [nickname, setNickname] = useState('마라엽떡');
+
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    console.log('nick: ', userData.nickname);
+    setNickname(userData.nickname);
+  }, [userData])
+
+  useEffect(() => {
+    const get_user = async (e) => {
+      try {
+        const response = await fetch('http://localhost:8080/mypage/info', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', 
+        });
+
+        if (response.ok) {
+          const data = await response.json(); // JSON 데이터 읽기
+          setUserData(data);
+        } else if (response.status === 401) {
+          alert('로그인 실패: 잘못된 자격 증명');
+        } else {
+          console.error(`로그인 실패: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('네트워크 에러 발생:', error);
+      }
+    }
+    get_user();
+  }, [])
 
   function handleAchievementClick() {
     navigate("/mypage/achievement");
@@ -37,10 +69,10 @@ export default function MyPage() {
       <div class="page-header">
         <h1 class="page-title">마이페이지</h1>
       </div>
-      
+  
       <ProfileCard
         profileImage={profileImage}
-        nickname="마라엽떡"
+        nickname={nickname}
         leftText="Lv: 1"
         rightText="초보 먹방러"
       />

@@ -3,6 +3,7 @@ package __2.SWE3002_42.Team._4.sungranchu;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,7 +30,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (테스트 환경에서만 사용)
                 .cors(cors -> cors.configurationSource(webCorsConfigurationSource())) // CORS 설정
-                .authorizeHttpRequests(auth -> auth
+                        .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/login", "/signup", "/public/**").permitAll() // 로그인 및 공개 경로
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )

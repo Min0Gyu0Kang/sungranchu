@@ -7,6 +7,39 @@ import restaurantIcon from "./img/restaurant_icon.png";
 
 export default function AchievementPage () {
   const navigate = useNavigate();
+  const [nickname, setNickname] = useState('마라엽떡');
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    console.log('nick: ', userData.nickname);
+    setNickname(userData.nickname);
+  }, [userData])
+
+  useEffect(() => {
+    const get_user = async (e) => {
+      try {
+        const response = await fetch('http://localhost:8080/mypage/info', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', 
+        });
+
+        if (response.ok) {
+          const data = await response.json(); // JSON 데이터 읽기
+          setUserData(data);
+        } else if (response.status === 401) {
+          alert('로그인 실패: 잘못된 자격 증명');
+        } else {
+          console.error(`로그인 실패: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('네트워크 에러 발생:', error);
+      }
+    }
+    get_user();
+  }, [])
   const goBack = true;
   const exampleData = [
     {
@@ -29,7 +62,6 @@ export default function AchievementPage () {
   const [achievements, setAchievements] = useState([]);
   const [exp, setExp] = useState(30);
   const [lv, setLv] = useState(1);
-  const [nickname, setNickname] = useState("마라엽떡");
 
   useEffect(() => {
     setAchievements(exampleData);
