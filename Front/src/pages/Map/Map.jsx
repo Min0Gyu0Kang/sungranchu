@@ -3,6 +3,8 @@ import "./Map.css";
 import Footer from "../../component/footer/Footer";
 import UpperNav from "../../component/upperNav/UpperNav";
 import restaurantsData from "./Restaurants.json"; // Adjust the path to your actual JSON file
+import { useLocation } from "react-router-dom"; // React Router의 useLocation 훅
+
 
 export default function MapPage() {
   const containerRef = useRef(null);
@@ -11,6 +13,9 @@ export default function MapPage() {
   const [infoWindows, setInfoWindows] = useState([]);
   const [map, setMap] = useState(null);
   const [mapReady, setMapReady] = useState(false);
+  const location = useLocation(); // 이전 페이지에서 전달된 데이터를 받기
+  const restaurant = location.state?.restaurant; // 전달된 식당 데이터
+  
   const categories = [
     "All",
     "한식",
@@ -29,29 +34,55 @@ export default function MapPage() {
     const mapScript = document.createElement("script");
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false`;
-
+  
     document.head.appendChild(mapScript);
-
+  
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
         const container = document.getElementById("map");
         const options = {
-          center: new window.kakao.maps.LatLng(37.2937, 126.9743), // 수원캠 기준
+          center: restaurant
+            ? new window.kakao.maps.LatLng(restaurant.lat, restaurant.lng) // 전달받은 식당 위치로 중심 설정
+            : new window.kakao.maps.LatLng(37.2937, 126.9743), // 수원캠 기준
           level: 5, // zoom level
         };
         const map = new window.kakao.maps.Map(container, options);
         setMap(map);
         setMapReady(true);
+  
+        if (restaurant) {
+          // 전달받은 식당 위치에 마커와 InfoWindow 추가
+          const markerPosition = new window.kakao.maps.LatLng(
+            restaurant.lat,
+            restaurant.lng
+          );
+          const marker = new window.kakao.maps.Marker({
+            position: markerPosition,
+          });
+          marker.setMap(map);
+  
+          const infoWindowContent = `
+            <div style="padding:5px;font-size:12px;">
+              <strong>${restaurant.name}</strong><br>
+              ${restaurant.address}
+            </div>
+          `;
+          const infowindow = new window.kakao.maps.InfoWindow({
+            content: infoWindowContent,
+          });
+          infowindow.open(map, marker);
+        }
       });
     };
-
+  
     mapScript.addEventListener("load", onLoadKakaoMap);
-
+  
     return () => {
       mapScript.removeEventListener("load", onLoadKakaoMap);
       document.head.removeChild(mapScript);
     };
-  }, []);
+  }, [restaurant]); // restaurant가 변경될 때마다 실행
+  
 
   const closeAllInfoWindows = () => {
     infoWindows.forEach((infowindow) => infowindow.close());

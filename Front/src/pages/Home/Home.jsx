@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import Footer from "../../component/footer/Footer";
 
@@ -31,57 +32,43 @@ export default function Home() {
   const [currentRestaurant, setCurrentRestaurant] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedKinggoPass, setSelectedKinggoPass] = useState(null);
+  const [categoriesData, setCategoriesData] = useState([]); // JSON 데이터를 저장
+  const [map, setMap] = useState(null); // Kakao 지도 객체
+  const [markers, setMarkers] = useState([]); // 지도에 표시된 마커 배열
+
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
+  const moveToLocation = (restaurant) => {
+    navigate("/map", { state: { restaurant } }); // 지도 페이지로 이동하며 데이터 전달
+  };
+
 
   const itemsPerPage = 4; // 한 페이지에 보여줄 아이템 수
   const totalPages = Math.ceil(6 / itemsPerPage);
 
-  const categories = [
-    { id: "korean", name: "한식", icon: korean },
-    { id: "japanese", name: "일식", icon: japanese },
-    { id: "chinese", name: "중식", icon: chinese },
-    { id: "western", name: "양식", icon: western },
-    { id: "asian", name: "아시안", icon: asian },
-    { id: "seafood", name: "해산물", icon: seafood },
-    { id: "meat", name: "고기", icon: meat },
-    { id: "hamburger", name: "햄버거", icon: hamburger },
-    { id: "bakery", name: "베이커리", icon: bakery },
-    { id: "snack", name: "분식", icon: snack },
-  ];
+  
+  useEffect(() => {
+    const mapScript = document.createElement("script");
+    mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_API_KEY&autoload=false`;
+    mapScript.async = true;
+  
+    document.head.appendChild(mapScript);
+  
+    mapScript.onload = () => {
+      window.kakao.maps.load(() => {
+        const container = document.getElementById("map");
+        const options = {
+          center: new window.kakao.maps.LatLng(37.5665, 126.9780), // Default center
+          level: 5,
+        };
+        const kakaoMap = new window.kakao.maps.Map(container, options);
+        setMap(kakaoMap); // Kakao 지도 객체를 상태로 저장
+      });
+    };
+  
+    return () => document.head.removeChild(mapScript);
+  }, []);
 
-  const restaurants = [
-    {
-      id: 1,
-      name: "아늑",
-      category: "korean",
-      rating: 4.5,
-      address: "서울특별시 강남구 테헤란로 123",
-      image: restaurant1,
-    },
-    {
-      id: 2,
-      name: "오스테리아우노",
-      category: "western",
-      rating: 4.0,
-      address: "서울특별시 서초구 반포대로 45",
-      image: restaurant2,
-    },
-    {
-      id: 3,
-      name: "일식당",
-      category: "japanese",
-      rating: 3.8,
-      address: "서울특별시 송파구 송파대로 55",
-      image: restaurant1,
-    },
-    {
-      id: 4,
-      name: "중식당",
-      category: "chinese",
-      rating: 4.2,
-      address: "서울특별시 동대문구 천호대로 100",
-      image: restaurant2,
-    },
-  ];
 
   const kinggoPassRestaurants = [
     {
@@ -142,6 +129,37 @@ export default function Home() {
     setSelectedKinggoPass(null);
   };
 
+  // 중복된 categories 선언 제거
+  const categories = [
+    { id: "# 한식", name: "한식", icon: korean },
+    { id: "# 일식", name: "일식", icon: japanese },
+    { id: "# 중식", name: "중식", icon: chinese },
+    { id: "# 양식", name: "양식", icon: western },
+    { id: "# 아시안", name: "아시안", icon: asian },
+    { id: "# 해산물", name: "해산물", icon: seafood },
+    { id: "# 고기", name: "고기", icon: meat },
+    { id: "# 햄버거", name: "햄버거", icon: hamburger },
+    { id: "# 베이커리", name: "베이커리", icon: bakery },
+    { id: "# 분식", name: "분식", icon: snack },
+  ];
+
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/restaurants.json");
+        if (!response.ok) throw new Error("Failed to fetch JSON data");
+        const data = await response.json();
+        console.log("Fetched data:", data); // 데이터 확인
+        setCategoriesData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+  
+
   const handleCategoryClick = (categoryId) => {
     setSelectedCategories((prevSelected) => {
       if (prevSelected.includes(categoryId)) {
@@ -151,24 +169,25 @@ export default function Home() {
       }
     });
   };
-
+  
   const handleDrawClick = () => {
-    const filteredRestaurants = restaurants.filter((restaurant) =>
-      selectedCategories.includes(restaurant.category)
-    );
-
+    // 필터링된 식당 리스트
+    const filteredRestaurants = categoriesData
+      .filter((category) => selectedCategories.includes(category.title)) // title과 선택된 카테고리 비교
+      .flatMap((category) => category.items);
+  
     if (filteredRestaurants.length > 0) {
       setPopupVisible(true);
       setAnimating(true);
       let animationIndex = 0;
-
+  
       const interval = setInterval(() => {
         setCurrentRestaurant(
           filteredRestaurants[animationIndex % filteredRestaurants.length]
         );
         animationIndex++;
       }, 200);
-
+  
       setTimeout(() => {
         clearInterval(interval);
         const randomIndex = Math.floor(
@@ -181,6 +200,7 @@ export default function Home() {
       alert("선택된 카테고리에서 추천할 식당이 없습니다!");
     }
   };
+  
 
   const closePopup = () => {
     setPopupVisible(false);
@@ -298,7 +318,7 @@ export default function Home() {
             {isAnimating && currentRestaurant && (
               <>
                 <img
-                  src={currentRestaurant.image}
+                  src={currentRestaurant.img}
                   alt={currentRestaurant.name}
                   className="popup-image"
                 />
@@ -331,7 +351,7 @@ export default function Home() {
             {!isAnimating && randomRestaurant && (
               <>
                 <img
-                  src={randomRestaurant.image}
+                  src={randomRestaurant.img}
                   alt={randomRestaurant.name}
                   className="popup-image"
                 />
@@ -358,7 +378,15 @@ export default function Home() {
                       />
                     ))}
                 </div>
+                
                 <div className="popup-buttons">
+                  <button
+                    className="popup-button"
+                    onClick={() => moveToLocation(randomRestaurant)}
+                  >
+                    지도에서 보기
+                  </button>
+                  
                   <button className="popup-button" onClick={closePopup}>
                     확인
                   </button>
