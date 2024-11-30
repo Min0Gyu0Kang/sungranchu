@@ -1,14 +1,45 @@
 import React, { useState, useEffect } from "react";
 import "./Search.css";
-import arrowIcon from "./arrow.png";
 import Footer from "../../component/footer/Footer";
 
 export default function Search() {
   const [searchCategories, setSearchCategories] = useState([]);
-  const [originalCategories, setOriginalCategories] = useState([]); // 원본 데이터를 저장
+  const [originalCategories, setOriginalCategories] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
+
+  // 방문 상태를 API로 가져오기
+  const fetchVisitStatus = async (data) => {
+    try {
+      const response = await fetch("/mypage/review/info", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch visit status");
+
+      const visitedRestaurants = await response.json();
+
+      // 방문 상태를 각 레스토랑 ID에 매핑
+      const visitedRestaurantIds = new Set(
+        visitedRestaurants.map((restaurant) => restaurant.id)
+      );
+
+      return data.map((category) => ({
+        ...category,
+        items: category.items.map((item) => ({
+          ...item,
+          visited: visitedRestaurantIds.has(item.id), // 방문 상태 매핑
+        })),
+      }));
+    } catch (error) {
+      console.error("Error fetching visit status:", error);
+      return data; // 에러 발생 시 원본 데이터를 그대로 반환
+    }
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -19,15 +50,17 @@ export default function Search() {
 
         const updatedData = data.map((category) => ({
           ...category,
-          currentPage: 0, // 각 카테고리의 현재 페이지 초기화
+          currentPage: 0,
           items: category.items.map((item) => ({
             ...item,
-            img: item.img.replace("public/", "/"), // 이미지 경로 수정
+            img: item.img.replace("public/", "/"),
           })),
         }));
 
-        setSearchCategories(updatedData);
-        setOriginalCategories(updatedData); // 원본 데이터를 저장
+        // 방문 상태를 데이터에 반영
+        const dataWithVisitStatus = await fetchVisitStatus(updatedData);
+        setSearchCategories(dataWithVisitStatus);
+        setOriginalCategories(dataWithVisitStatus);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -39,13 +72,11 @@ export default function Search() {
   const handleSearch = () => {
     try {
       if (searchQuery.trim() === "") {
-        // 검색어가 비어 있으면 원본 데이터를 복원
         setSearchCategories(originalCategories);
         setError(null);
         return;
       }
 
-      // 검색어로 필터링
       const matchedCategories = originalCategories
         .map((category) => ({
           ...category,
@@ -103,19 +134,46 @@ export default function Search() {
   };
 
   const openPopup = (restaurant) => {
-    setSelectedRestaurant({ ...restaurant, visited: false });
+    setSelectedRestaurant({ ...restaurant });
   };
 
   const closePopup = () => {
     setSelectedRestaurant(null);
   };
 
-  const toggleVisitComplete = () => {
+  const toggleVisitComplete = async () => {
     if (selectedRestaurant) {
-      setSelectedRestaurant((prev) => ({
-        ...prev,
-        visited: !prev.visited,
-      }));
+      const updatedVisitedState = !selectedRestaurant.visited;
+
+      try {
+        // 방문 상태를 백엔드에 업데이트
+        await fetch(`/${selectedRestaurant.id}/visit`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        // 상태 업데이트
+        setSelectedRestaurant((prev) => ({
+          ...prev,
+          visited: updatedVisitedState,
+        }));
+
+        setSearchCategories((prevCategories) =>
+          prevCategories.map((category) => ({
+            ...category,
+            items: category.items.map((item) =>
+              item.id === selectedRestaurant.id
+                ? { ...item, visited: updatedVisitedState }
+                : item
+            ),
+          }))
+        );
+      } catch (error) {
+        console.error("Error updating visit status:", error);
+      }
     }
   };
 

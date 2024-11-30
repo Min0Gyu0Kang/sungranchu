@@ -14,32 +14,29 @@ export default function ReviewPage() {
   useEffect(() => {
     const fetchVisitedData = async () => {
       try {
-        // 방문한 식당 데이터를 가져옴
-        const visitedResponse = await fetch("/visited.json");
-        const visitedData = await visitedResponse.json();
-
-        // 전체 식당 데이터를 가져옴
-        const restaurantsResponse = await fetch("/restaurants.json");
-        const restaurantsData = await restaurantsResponse.json();
-
-        // 이름을 기준으로 매칭
-        const matchedRestaurants = [];
-        visitedData.visited.forEach((visited) => {
-          restaurantsData.forEach((category) => {
-            const match = category.items.find(
-              (item) => item.name === visited.name
-            );
-            if (match) {
-              // 이미지 경로 수정
-              matchedRestaurants.push({
-                ...match,
-                img: `/${match.img}`, // public 디렉토리는 자동으로 매핑됨
-              });
-            }
-          });
+        // 방문한 식당 데이터를 백엔드에서 가져옴
+        const response = await fetch("/mypage/review/info", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // 인증 정보 포함
         });
 
-        setVisitedRestaurants(matchedRestaurants);
+        if (!response.ok) {
+          throw new Error("Failed to fetch visited restaurant data.");
+        }
+
+        const restaurants = await response.json();
+
+        // 이미지 경로 수정 및 데이터 준비
+        const updatedRestaurants = restaurants.map((restaurant) => ({
+          ...restaurant,
+          img: `/${restaurant.img}`, // public 디렉토리는 자동으로 매핑됨
+          reviews: restaurant.reviews || [], // 리뷰 데이터가 없는 경우 빈 배열
+        }));
+
+        setVisitedRestaurants(updatedRestaurants);
       } catch (error) {
         console.error("Error fetching restaurant data:", error);
       }
