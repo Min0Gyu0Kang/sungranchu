@@ -260,18 +260,20 @@ export default function Home() {
       {selectedKinggoPass && (
         <div className="popup">
           <div className="popup-content">
-            <img
-              src={selectedKinggoPass.image}
-              alt={selectedKinggoPass.name}
-              className="popup-image"
-            />
-            <h3 className="popup-title">{selectedKinggoPass.name}</h3>
-            <p className="popup-address">{selectedKinggoPass.address}</p>
-            <ul className="popup-services">
-              {selectedKinggoPass.services.map((service, index) => (
-                <li key={index}>{service}</li>
-              ))}
-            </ul>
+            <div className="popup-scrollable">
+              <img
+                src={selectedKinggoPass.image}
+                alt={selectedKinggoPass.name}
+                className="popup-image"
+              />
+              <h3 className="popup-title">{selectedKinggoPass.name}</h3>
+              <p className="popup-address">{selectedKinggoPass.address}</p>
+              <ul className="popup-services">
+                {selectedKinggoPass.services.map((service, index) => (
+                  <li key={index}>{service}</li>
+                ))}
+              </ul>
+            </div>
             <div className="kingo-popup-buttons">
               <a
                 href={selectedKinggoPass.mapUrl}
