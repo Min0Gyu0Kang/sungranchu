@@ -57,6 +57,7 @@ export default function SignupForm() {
 
   function sendAuthCode() {
     const email = formData["memberEmail"] + "@g.skku.edu";
+    console.log('이메일: ', email)
     fetch("http://localhost:8080/request-sign-up", {
       method: "POST",
       headers: {
@@ -82,7 +83,6 @@ export default function SignupForm() {
     if (formData["memberEmail"]) {
       // 인증번호 발송 처리 로직
       sendAuthCode();
-      alert("인증번호가 발송되었습니다.");
       setVerificationSent(true); // 인증번호 발송 후 상태 업데이트
     } else {
       alert("이메일을 입력해 주세요.");
@@ -92,7 +92,7 @@ export default function SignupForm() {
   return (
     <div className="signup-container">
       <div className="form-container">
-        <form novalidate onSubmit={handleSubmit}>
+        <form noValidate onSubmit={handleSubmit}>
           <label htmlFor="name">이름</label>
           <input
             name="memberName"

@@ -75,7 +75,6 @@ public class UserController {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
 
-
         Member member = new Member();
         member.setMemberName(signUpRequestDto.getMemberName());
         member.setNickname(signUpRequestDto.getNickname());

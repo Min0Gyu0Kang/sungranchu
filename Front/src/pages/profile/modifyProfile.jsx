@@ -68,9 +68,15 @@ export default function ModifyPage () {
 
   function handleImageUpload(e) {
     const file = e.target.files[0];
+    
     if (file) {
       const formData = new FormData();
       formData.append("image", file); // 서버에서 @RequestParam("image")와 매핑
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result); // Base64 URL을 상태에 저장
+      };
+      reader.readAsDataURL(file);
   
       const uploadImage = async () => {
         try {
