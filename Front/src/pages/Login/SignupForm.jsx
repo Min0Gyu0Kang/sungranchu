@@ -26,8 +26,8 @@ export default function SignupForm() {
 
     const urlEncodedData = new URLSearchParams();
     Object.keys(formData).forEach((key) => {
-      if (key == 'memberEmail') {
-        urlEncodedData.append(key, formData[key]+"@g.skku.edu");
+      if (key == "memberEmail") {
+        urlEncodedData.append(key, formData[key] + "@g.skku.edu");
       } else {
         urlEncodedData.append(key, formData[key]);
       }
@@ -44,7 +44,7 @@ export default function SignupForm() {
 
       if (response.ok) {
         alert("계정 생성 성공! 로그인페이지로 이동합니다.");
-        navigate("/loginform");
+        navigate("/login");
       } else {
         const errorMessage = await response.text();
         alert(`오류 발생: ${errorMessage}`);

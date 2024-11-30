@@ -7,63 +7,58 @@ import { useNavigate } from "react-router-dom";
 const filledStar = "/image/filled_star.svg";
 const emptyStar = "/image/empty_star.svg";
 
-export default function VisitedPage() {
+export default function ReviewPage() {
+  const [visitedRestaurants, setVisitedRestaurants] = useState([]);
   const navigate = useNavigate();
-  const [restaurants, setRestaurants] = useState([]); // 방문 식당 목록
-  const [error, setError] = useState(null); // 에러 상태
 
   useEffect(() => {
-    const fetchVisitedRestaurants = async () => {
+    const fetchVisitedData = async () => {
       try {
-        // 1. 백엔드에서 방문한 식당 이름만 가져오기
-        const response = await fetch("/mypage/review/info", {
-          method: "GET",
-          credentials: "include", // 쿠키 포함 (Authentication 사용 시)
+        // 방문한 식당 데이터를 가져옴
+        const visitedResponse = await fetch("/visited.json");
+        const visitedData = await visitedResponse.json();
+
+        // 전체 식당 데이터를 가져옴
+        const restaurantsResponse = await fetch("/restaurants.json");
+        const restaurantsData = await restaurantsResponse.json();
+
+        // 이름을 기준으로 매칭
+        const matchedRestaurants = [];
+        visitedData.visited.forEach((visited) => {
+          restaurantsData.forEach((category) => {
+            const match = category.items.find(
+              (item) => item.name === visited.name
+            );
+            if (match) {
+              // 이미지 경로 수정
+              matchedRestaurants.push({
+                ...match,
+                img: `/${match.img}`, // public 디렉토리는 자동으로 매핑됨
+              });
+            }
+          });
         });
 
-        if (!response.ok)
-          throw new Error("Failed to fetch visited restaurants");
-        const visitedRestaurantNames = await response.json();
-
-        // 2. JSON 파일에서 방문한 식당 정보 찾기
-        const jsonResponse = await fetch("/restaurants.json");
-        if (!jsonResponse.ok) throw new Error("Failed to load JSON file");
-        const restaurantData = await jsonResponse.json();
-
-        // 3. 방문 식당 이름과 JSON 데이터 매칭
-        const matchedRestaurants = restaurantData.filter((restaurant) =>
-          visitedRestaurantNames.some(
-            (visited) => visited.name === restaurant.name
-          )
-        );
-
-        setRestaurants(matchedRestaurants); // 상태 업데이트
-        setError(null);
-      } catch (err) {
-        console.error("Error:", err);
-        setError("식당 정보를 불러오는 데 실패했습니다.");
+        setVisitedRestaurants(matchedRestaurants);
+      } catch (error) {
+        console.error("Error fetching restaurant data:", error);
       }
     };
 
-    fetchVisitedRestaurants();
+    fetchVisitedData();
   }, []);
-
-  const handleReviewClick = (restaurantId) => {
-    navigate(`/mypage/review/write/${restaurantId}`);
-  };
 
   return (
     <div className="container review-page">
       <UpperNav title="방문 식당 기록" goBack={true} />
       <div className="scrollable-content">
-        {error && <p className="error">{error}</p>}
-        {restaurants.map((restaurant) => (
-          <div key={restaurant.id} className="profile-card">
+        {visitedRestaurants.map((restaurant, index) => (
+          <div key={index} className="profile-card">
             {/* 왼쪽: 식당 이미지 */}
             <div className="profile-left">
               <img
                 className="profile-image"
-                src={restaurant.image}
+                src={restaurant.img} // 경로는 이미 조정됨
                 alt={restaurant.name}
               />
             </div>
@@ -82,12 +77,18 @@ export default function VisitedPage() {
                       <img
                         key={i}
                         src={
-                          i < Math.floor(restaurant.rating)
+                          i <
+                          Math.floor(
+                            restaurant.reviews.reduce(
+                              (sum, review) => sum + review.rating,
+                              0
+                            ) / restaurant.reviews.length
+                          )
                             ? filledStar
                             : emptyStar
                         }
                         alt="star"
-                        style={{ width: "16px", height: "16px" }} // 별 크기 조정
+                        style={{ width: "16px", height: "16px" }}
                       />
                     ))}
                 </span>
@@ -95,7 +96,7 @@ export default function VisitedPage() {
                   className="right-text"
                   style={{ fontSize: "14px", color: "#666" }}
                 >
-                  ({restaurant.reviews})
+                  ({restaurant.reviews.length})
                 </span>
               </div>
               {/* 주소와 카테고리 */}
@@ -103,10 +104,7 @@ export default function VisitedPage() {
                 style={{ marginTop: "8px", fontSize: "12px", color: "#666" }}
               >
                 <p style={{ margin: "0", lineHeight: "1.5" }}>
-                  {restaurant.location}
-                </p>
-                <p style={{ margin: "0", lineHeight: "1.5" }}>
-                  {restaurant.category}
+                  {restaurant.address}
                 </p>
               </div>
             </div>
