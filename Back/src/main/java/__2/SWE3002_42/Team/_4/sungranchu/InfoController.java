@@ -34,7 +34,7 @@ public class InfoController {
     public ResponseEntity<?> modifyProfile(@RequestParam("image") MultipartFile file, Authentication auth) {
         String nickname = auth.getName();
         Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException(""));
-        String dir = "Back/src/main/resources/profiles/";
+        String dir = "src/main/resources/profiles/";
         String filename = nickname+ "_profile.png";
         Path path = Paths.get(dir, filename);
         try {
