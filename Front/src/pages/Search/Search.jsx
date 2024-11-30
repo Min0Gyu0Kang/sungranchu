@@ -91,18 +91,9 @@ export default function Search() {
     );
   };
 
-  if (searchCategories.length === 0) {
-    return <div className="search-container"><div
-    style={{
-      display: "flex",       // Flexbox 활성화
-      justifyContent: "center", // 수평 가운데 정렬
-      alignItems: "center",     // 수직 가운데 정렬
-      height: "100vh"         // (선택) 화면 전체 높이 가운데 정렬
-    }}
-  >
-    Loading...
-  </div></div>; // 데이터 로딩 중 표시
-  }
+  // if (searchCategories.length === 0) {
+  //   return <div className="search-container"></div>; // 데이터 로딩 중 표시
+  // }
 
   return (
     <div className="search-container">
@@ -120,7 +111,16 @@ export default function Search() {
       </div>
 
       <div className="search-results">
-        {searchCategories.map((category, index) => (
+        {(searchCategories.length === 0) ? 
+        <div
+          style={{
+            display: "flex",       // Flexbox 활성화
+            justifyContent: "center", // 수평 가운데 정렬
+            alignItems: "center",     // 수직 가운데 정렬
+            height: "100vh"         // (선택) 화면 전체 높이 가운데 정렬
+          }}
+        >Loading...</div>  : 
+         searchCategories.map((category, index) => (
           <div key={index} className="search-category">
             <h3 className="category-title">{category.title}</h3>
             <div className="category-items-container">
