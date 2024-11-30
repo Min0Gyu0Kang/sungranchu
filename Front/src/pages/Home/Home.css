@@ -49,7 +49,7 @@
 }
 
 .category.selected {
-  border-color: #519a51;
+  border-color: #366243;
   background-color: #f0fff0;
 }
 
@@ -259,7 +259,7 @@
 .popup-title {
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
 }
 
 /* 카테고리 텍스트 */
@@ -344,21 +344,22 @@
   animation: slide-down 0.3s ease-out; /* 나타나는 애니메이션 */
 }
 
-/* 모달 이미지 */
+/* 팝업 이미지 */
 .popup-image {
-  width: 100%;
-  height: auto;
-  border-radius: 12px; /* 부드러운 모서리 */
-  margin-bottom: 16px;
-  object-fit: cover;
+  width: 400px; /* 가로 크기 고정 */
+  height: 300px; /* 세로 크기 고정 */
+  border-radius: 12px; /* 모서리 둥글게 */
+  object-fit: cover; /* 비율 유지하며 잘라내기 */
+  margin-bottom: 15px; /* 아래 여백 */
 }
+
 
 /* 모달 제목 */
 .popup-title {
   font-size: 20px;
   font-weight: bold;
   color: #333333;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
 }
 
 /* 모달 주소 */
