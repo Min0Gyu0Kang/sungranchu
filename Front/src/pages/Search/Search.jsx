@@ -15,7 +15,7 @@ export default function Search() {
   const navigate = useNavigate();
 
   const moveToMapPage = (restaurant) => {
-    navigate("/map", { state: { restaurant } });
+    navigate(`/map?q=${encodeURIComponent(restaurant.name)}`)
   };
 
   // 방문 상태를 API로 가져오기
