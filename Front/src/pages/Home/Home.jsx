@@ -39,7 +39,7 @@ export default function Home() {
   const navigate = useNavigate(); // useNavigate 훅 사용
 
   const moveToLocation = (restaurant) => {
-    navigate("/map", { state: { restaurant } }); // 지도 페이지로 이동하며 데이터 전달
+    navigate(`/map?q=${encodeURIComponent(restaurant.name)}`) // 지도 페이지로 이동하며 데이터 전달
   };
 
 
@@ -77,8 +77,7 @@ export default function Home() {
       image: doremifasta,
       address: "경기도 수원시 장안구 서부로 2106번길 26-15",
       services: ["2만원 이상 주문시 테이블 당 포카치아 빵 or 탄산음료 제공"],
-      lat: 37.5665,
-      lng: 126.9780,
+      mapUrl: (name) => `http://localhost:3000/map?q=${encodeURIComponent(name)}`
     },
     {
       id: 2,
@@ -86,7 +85,7 @@ export default function Home() {
       image: mudebohotdog,
       address: "경기도 수원시 장안구 율전동 290-14",
       services: ["결제 금액의 10% 할인"],
-      mapUrl: "https://maps.google.com/?q=37.5670,126.9820",
+      mapUrl: (name) => `/map?q=${encodeURIComponent(name)}`
     },
     {
       id: 3,
@@ -94,7 +93,7 @@ export default function Home() {
       image: jungdeunchickenfeet,
       address: "서울특별시 송파구 송파대로 67",
       services: ["대왕 달걀찜 제공"],
-      mapUrl: "https://maps.google.com/?q=37.5650,126.9810",
+      mapUrl: (name) => `http://localhost:3000/map?q=${encodeURIComponent(name)}`
     },
     {
       id: 4,
@@ -102,7 +101,7 @@ export default function Home() {
       image: jeongseongtable,
       address: "경기도 수원시 장안구 서부로 2136번길 9 1층",
       services: ["테이블 당 음료수 or 에이드 제공"],
-      mapUrl: "https://maps.google.com/?q=37.5680,126.9790",
+      mapUrl: (name) => `http://localhost:3000/map?q=${encodeURIComponent(name)}`
     },
     {
       id: 5,
@@ -110,7 +109,7 @@ export default function Home() {
       image: jeongjikyubu,
       address: "경기도 수원시 장안구 서부로 2126번길 10",
       services: ["매장 취식 및 포장 주문시, 1인 1음료수 제공"],
-      mapUrl: "https://maps.google.com/?q=37.5645,126.9765",
+      mapUrl: (name) => `http://localhost:3000/map?q=${encodeURIComponent(name)}`
     },
     {
       id: 6,
@@ -118,7 +117,7 @@ export default function Home() {
       image: taekineclam,
       address: "경기도 수원시 장안구 율전로 98번길 9 1층",
       services: ["테이블 당 음료수 1개 서비스"],
-      mapUrl: "https://maps.google.com/?q=37.5675,126.9775",
+      mapUrl: (name) => `http://localhost:3000/map?q=${encodeURIComponent(name)}`
     },
   ];
 
