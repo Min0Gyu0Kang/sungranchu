@@ -37,6 +37,19 @@ export default function ReviewPage() {
         const response2 = await fetch("/restaurants.json");
         const restaurantData = await response2.json();
 
+        //리뷰 가져오기
+        const response3 = await fetch("/allReview", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        if (!response3.ok) {
+          throw new Error("Failed to fetch review data.");
+        }
+        const reviewData = await response3.json();
+
         // 모든 items를 병합하여 하나의 배열로 만듦
         const allRestaurants = restaurantData.flatMap(
           (category) => category.items
@@ -53,6 +66,12 @@ export default function ReviewPage() {
           img: `/image/${restaurant.id}.png`, // id를 기반으로 이미지 경로 생성
         }));
         console.log(`restaurant.id: {restaurant.id}`);
+        reviewData.forEach((review)=>{
+          const restaurant = updatedRestaurants.find((r) => r.id === review.id);
+          if (restaurant) {
+            restaurant.reviews.push({ text: review.content, rating: review.rating });
+          }
+        });
 
         setVisitedRestaurants(updatedRestaurants);
 
