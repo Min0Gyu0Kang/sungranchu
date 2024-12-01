@@ -54,9 +54,9 @@ public class MailService {
             messageHelper.setSubject("[성랜추] 이메일 인증 번호 발송");
 
             String body = "<html><body>";
-            body += "<h1>성랜추 이메일 인증</h1>";
-            body += "<p>인증 번호: <strong>" + number + "</strong></p>";
-            body += "</body></html>";
+            //body += "<h1>성랜추 이메일 인증</h1>";
+            body +=  number;
+            //body += "</body></html>";
 
             messageHelper.setText(body, true);
         } catch (MessagingException e) {
