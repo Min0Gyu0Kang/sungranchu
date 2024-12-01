@@ -84,7 +84,18 @@ export default function Search() {
         const response = await fetch("/restaurants.json");
         if (!response.ok) throw new Error("Failed to fetch JSON data");
         const data = await response.json();
-
+        //리뷰 가져오기
+        const response3 = await fetch("/allReview", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        if (!response3.ok) {
+          throw new Error("Failed to fetch review data.");
+        }
+        const reviewData = await response3.json();
         const updatedData = data.map((category) => ({
           ...category,
           currentPage: 0,
@@ -93,7 +104,15 @@ export default function Search() {
             img: item.img.replace("public/", "/"),
           })),
         }));
-
+        const restaurants = data.flatMap(
+            (category) => category.items
+        );
+        reviewData.forEach((review)=>{
+          const restaurant = restaurants.find((r) => r.id === review.id);
+          if (restaurant) {
+            restaurant.reviews.push({ text: review.content, rating: review.rating });
+          }
+        });
         // 방문 상태를 데이터에 반영
         const dataWithVisitStatus = await fetchVisitStatus(updatedData);
         setSearchCategories(dataWithVisitStatus);

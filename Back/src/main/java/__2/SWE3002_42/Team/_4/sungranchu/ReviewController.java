@@ -20,20 +20,19 @@ public class ReviewController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/mypage/review/write/{restaurantId}/add")
-    public ResponseEntity<?> addReview(@PathVariable Long restaurantId, @RequestParam Map<String, Object> payload, Authentication auth){
+    public ResponseEntity<?> addReview(@PathVariable Long restaurantId, @RequestParam String content, @RequestParam String rating, Authentication auth){
         String nickname = auth.getName();
         Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException(""));
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException(""));
 
-        String content = (String) payload.get("content");
-        Double rating = Double.valueOf(payload.get("rating").toString());
+        Double drating = Double.valueOf(rating);
 
         Review review = new Review();
         review.setMember(member);
         review.setRestaurant(restaurant);
         review.setContent(content);
-        review.setRating(rating);
+        review.setRating(drating);
         reviewRepository.save(review);
 
         Visit visit = visitRepository.findByMemberAndRestaurant(member, restaurant).orElseThrow(() -> new IllegalArgumentException(""));
@@ -66,5 +65,19 @@ public class ReviewController {
         response.put("reviews", reviewDetails);
 
         return ResponseEntity.ok(response);
+    }
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/allReview")
+    public ResponseEntity<?> getAllReview(){
+        List<Review> reviews = reviewRepository.findAll();
+        List<Map<String, Object>> reviewDetails = new ArrayList<>();
+        for(Review review : reviews){
+            Map<String, Object> reviewDetail = new HashMap<>();
+            reviewDetail.put("id", review.getRestaurant().getId());
+            reviewDetail.put("rating", review.getRating());
+            reviewDetail.put("content", review.getContent());
+            reviewDetails.add(reviewDetail);
+        }
+        return ResponseEntity.ok(reviewDetails);
     }
 }
