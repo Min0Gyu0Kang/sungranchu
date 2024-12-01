@@ -52,3 +52,10 @@
   width: 100%;
   height: 100%; /* 지도 높이와 부모 요소에 맞춤 */
 }
+
+#map iframe {
+  transform: scale(0.75); /* Scale to 75% */
+  transform-origin: 0 0;  /* Scale from the top-left corner */
+  width: 133.33%;  /* Compensate for the scaling to maintain original size */
+  height: 133.33%; /* Compensate for the scaling */
+}
