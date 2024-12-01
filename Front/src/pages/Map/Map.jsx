@@ -84,10 +84,14 @@ export default function MapPage() {
   }, [restaurant]); // restaurant가 변경될 때마다 실행
   
 
+
+  
   const closeAllInfoWindows = () => {
     infoWindows.forEach((infowindow) => infowindow.close());
     setInfoWindows([]);
   };
+
+  
 
   const batchMarkers = (restaurants, batchSize) => {
     let index = 0;
