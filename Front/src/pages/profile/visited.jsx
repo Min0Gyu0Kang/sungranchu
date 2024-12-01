@@ -56,7 +56,6 @@ export default function ReviewPage() {
 
         setVisitedRestaurants(updatedRestaurants);
 
-        setVisitedRestaurants(matchedRestaurants);
       } catch (error) {
         console.error("Error fetching restaurant data:", error);
       }
