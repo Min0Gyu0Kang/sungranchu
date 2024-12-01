@@ -62,15 +62,23 @@ export default function MapPage() {
           marker.setMap(map);
   
           const infoWindowContent = `
-            <div style="padding:5px;font-size:12px;">
-              <strong>${restaurant.name}</strong><br>
-              ${restaurant.address}
+            <div class="infoWindowContainer" style="padding: 10px; font-size: 14px;">
+              <strong style="font-size: 16px;">${restaurant.name}</strong><br>
+              <div style="margin-top: 5px;">${restaurant.address}</div>
+              <button id="getDirectionButton" style="margin-top: 10px; padding: 8px 12px; font-size: 14px;">길찾기</button>
             </div>
           `;
           const infowindow = new window.kakao.maps.InfoWindow({
             content: infoWindowContent,
           });
           infowindow.open(map, marker);
+          // Add event listener to the button
+          const button = document.getElementById("getDirectionButton");
+          if (button) {
+            button.addEventListener("click", () => {
+              getDirections(restaurant.lat, restaurant.lng);
+            });
+          }
         }
       });
     };
@@ -82,7 +90,6 @@ export default function MapPage() {
       document.head.removeChild(mapScript);
     };
   }, [restaurant]); // restaurant가 변경될 때마다 실행
-  
 
   const closeAllInfoWindows = () => {
     infoWindows.forEach((infowindow) => infowindow.close());
@@ -170,6 +177,51 @@ export default function MapPage() {
       setSelectedCategories(["All"]);
     }
   }, [selectedCategories]);
+
+  const getDirections = async (startLat, startLng) => {
+    const endLat = restaurant.lat; // Example: Replace with actual destination latitude
+    const endLng = restaurant.lng; // Example: Replace with actual destination longitude
+
+    try {
+      const response = await fetch(
+          `http://localhost:8080/car-direction?startLat=${startLat}&startLng=${startLng}&endLat=${endLat}&endLng=${endLng}`,
+          {
+            method: 'GET',
+          }
+      );
+
+      const data = await response.json();  // Parse the JSON response
+
+      const linePath = [];
+      data.routes[0].sections[0].roads.forEach((router) => {
+        router.vertexes.forEach((vertex, index) => {
+          // Only push lat/lng pairs to linePath
+          if (index % 2 === 0) {
+            // vertexes array is alternating lat, lng; so, pair them correctly
+            linePath.push(new window.kakao.maps.LatLng(router.vertexes[index + 1], router.vertexes[index]));
+          }
+        });
+      });
+
+      // Create a polyline to show the route
+      const polyline = new window.kakao.maps.Polyline({
+        path: linePath,
+        strokeWeight: 5,        // Line thickness
+        strokeColor: '#000000', // Line color (black)
+        strokeOpacity: 0.7,     // Line opacity
+        strokeStyle: 'solid'    // Line style (solid)
+      });
+
+      // Display the polyline on the map
+      polyline.setMap(map);
+
+      console.log("Directions data:", data); // Log the directions data for reference
+
+    } catch (error) {
+      console.error("Error fetching directions:", error);
+    }
+  };
+
 
   return (
     <div className="container">
