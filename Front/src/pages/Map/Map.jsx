@@ -13,8 +13,10 @@ export default function MapPage() {
   const [infoWindows, setInfoWindows] = useState([]);
   const [map, setMap] = useState(null);
   const [mapReady, setMapReady] = useState(false);
+  const [polyline, setPolyline] = useState(null); // Track the polyline
   const location = useLocation(); // 이전 페이지에서 전달된 데이터를 받기
   const restaurant = location.state?.restaurant; // 전달된 식당 데이터
+  const [distanceOverlay, setDistanceOverlay] = useState(null);
 
   const categories = [
     "All",
@@ -72,11 +74,27 @@ export default function MapPage() {
     };
   }, [restaurant]); // restaurant가 변경될 때마다 실행
 
-
-
   const closeAllInfoWindows = () => {
     infoWindows.forEach((infowindow) => infowindow.close());
     setInfoWindows([]);
+  };
+
+  const removeAllMarkers = () => {
+    markers.forEach((marker) => marker.setMap(null));
+    setMarkers([]);
+  };
+
+  const removePolyline = () => {
+    if (polyline) {
+      polyline.setMap(null); // Remove the polyline from the map
+      setPolyline(null); // Reset the polyline state
+    }
+  };
+  const removeDotOverlay = () => {
+    if (distanceOverlay) {
+      distanceOverlay.setMap(null); // Remove the overlay from the map
+      setDistanceOverlay(null); // Reset the state
+    }
   };
 
   const batchMarkers = (restaurants, batchSize) => {
@@ -112,6 +130,9 @@ export default function MapPage() {
           const button = document.getElementById(uniqueButtonId);
           if (button) {
             button.addEventListener("click", () => {
+              // Remove all markers and info windows before fetching directions
+              removeAllMarkers();
+              closeAllInfoWindows();
               getDirections(lat, lng).then((r) => {
                 console.log("Directions fetched successfully:", r);
               });
@@ -136,14 +157,12 @@ export default function MapPage() {
     }, 100);
   };
 
-
   useEffect(() => {
     if (mapReady && map) {
       closeAllInfoWindows();
-
-      // Clear previous markers
-      markers.forEach((marker) => marker.setMap(null));
-      setMarkers([]);
+      removeAllMarkers();
+      removePolyline(); // Ensure polyline is removed when categories change
+      removeDotOverlay();
 
       // Filter restaurants based on selected categories
       const filteredRestaurants = selectedCategories.includes("All")
@@ -182,9 +201,9 @@ export default function MapPage() {
 
   const getDirections = async (endLat, endLng) => {
     // Get the start coordinates (map center)
-    const startLat = map.getCenter().getLat();
-    const startLng = map.getCenter().getLng();
-    console.log("Coordinates:",startLat,startLng,endLat,endLng);
+    const startLat = 37.2937;
+    const startLng = 126.9743;
+    console.log("Coordinates:", startLat, startLng, endLat, endLng);
     try {
       // Fetch directions from your backend (ensure the backend server is running)
       const response = await fetch(
@@ -197,7 +216,9 @@ export default function MapPage() {
         throw new Error("Failed to fetch directions");
       }
       if (response.ok) {
-        console.log('response:',response);
+        closeAllInfoWindows();
+        removeAllMarkers();
+        removeDotOverlay(); // Remove the old overlay before adding a new one
         const data = await response.json();
         console.log('Parsed JSON:', data); // Verify the structure here
         const linePath = [];
@@ -210,7 +231,7 @@ export default function MapPage() {
         });
 
         // Create a polyline to show the route
-        const polyline = new window.kakao.maps.Polyline({
+        const newPolyline = new window.kakao.maps.Polyline({
           path: linePath,
           strokeWeight: 5,
           strokeColor: "#000000",
@@ -218,7 +239,28 @@ export default function MapPage() {
           strokeStyle: "solid",
         });
 
-        polyline.setMap(map); // Display the polyline on the map
+        // Set polyline in state
+        setPolyline(newPolyline);
+
+        // Calculate the distance between the two points
+        var distance = newPolyline.getLength(); // The length in meters
+        var roundedDistance = Math.round(distance); // Round the distance to a whole number
+        console.log('목적지까지 거리:', roundedDistance, 'm');
+
+        // Optionally, display the distance on the map
+        var overlay = new window.kakao.maps.CustomOverlay({
+          map: map,
+          content: '<div class="dotOverlay distanceInfo" style="background-color: #f0f0f0;font-weight:bold;color:#ee6152;">목적지까지 거리: <span class="number">' + roundedDistance + '</span> m</div>',
+          position: new window.kakao.maps.LatLng((startLat + endLat) / 2, (startLng + endLng) / 2), // Position the overlay in the middle of the line
+          xAnchor: 0.5,
+          yAnchor: 0
+        });
+
+        // Set the overlay state to the new overlay
+        setDistanceOverlay(overlay);
+
+        // Display the polyline on the map
+        newPolyline.setMap(map);
 
       } else {
         console.error('Failed to fetch directions:', response.statusText);
@@ -231,8 +273,8 @@ export default function MapPage() {
 
   return (
       <div className="container">
-        <div class="map-header">
-          <h2 class="map-title">지도</h2>
+        <div className="map-header">
+          <h2 className="map-title">지도</h2>
         </div>
         <div className="map-container">
           <div className="map-filter">
