@@ -75,15 +75,16 @@ export default function Home() {
       id: 1,
       name: "도레미파스타",
       image: doremifasta,
-      address: "서울특별시 강남구 강남대로 123",
-      services: ["2만원 이상 주문시 테이블 당 탄산음료 제공"],
-      mapUrl: "https://maps.google.com/?q=37.5665,126.9780",
+      address: "경기도 수원시 장안구 서부로 2106번길 26-15",
+      services: ["2만원 이상 주문시 테이블 당 포카치아 빵 or 탄산음료 제공"],
+      lat: 37.5665,
+      lng: 126.9780,
     },
     {
       id: 2,
       name: "무대뽀핫도그",
       image: mudebohotdog,
-      address: "서울특별시 서초구 서초대로 45",
+      address: "경기도 수원시 장안구 율전동 290-14",
       services: ["결제 금액의 10% 할인"],
       mapUrl: "https://maps.google.com/?q=37.5670,126.9820",
     },
@@ -99,7 +100,7 @@ export default function Home() {
       id: 4,
       name: "정성식탁",
       image: jeongseongtable,
-      address: "서울특별시 강남구 테헤란로 152",
+      address: "경기도 수원시 장안구 서부로 2136번길 9 1층",
       services: ["테이블 당 음료수 or 에이드 제공"],
       mapUrl: "https://maps.google.com/?q=37.5680,126.9790",
     },
@@ -107,7 +108,7 @@ export default function Home() {
       id: 5,
       name: "정직유부",
       image: jeongjikyubu,
-      address: "서울특별시 마포구 마포대로 65",
+      address: "경기도 수원시 장안구 서부로 2126번길 10",
       services: ["매장 취식 및 포장 주문시, 1인 1음료수 제공"],
       mapUrl: "https://maps.google.com/?q=37.5645,126.9765",
     },
@@ -115,7 +116,7 @@ export default function Home() {
       id: 6,
       name: "택이네 조개전골",
       image: taekineclam,
-      address: "서울특별시 은평구 연서로 23",
+      address: "경기도 수원시 장안구 율전로 98번길 9 1층",
       services: ["테이블 당 음료수 1개 서비스"],
       mapUrl: "https://maps.google.com/?q=37.5675,126.9775",
     },
@@ -308,14 +309,12 @@ export default function Home() {
               </ul>
             </div>
             <div className="kingo-popup-buttons">
-              <a
-                href={selectedKinggoPass.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="popup-map-link"
+              <button
+                className="popup-map-button"
+                onClick={() => moveToLocation(selectedKinggoPass)}
               >
-                지도에서 보기
-              </a>
+              지도에서 보기
+                </button>
               <button className="popup-map-link" onClick={closeKinggoPassPopup}>
                 닫기
               </button>

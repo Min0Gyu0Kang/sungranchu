@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Search.css";
 import Footer from "../../component/footer/Footer";
+import { useNavigate } from "react-router-dom"; // React Router의 useNavigate 훅
+
 
 export default function Search() {
   const [searchCategories, setSearchCategories] = useState([]);
@@ -8,6 +10,12 @@ export default function Search() {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
+  const [map, setMap] = useState(null); // 지도 객체 상태
+  const navigate = useNavigate();
+
+  const moveToMapPage = (restaurant) => {
+    navigate("/map", { state: { restaurant } });
+  };
 
   // 방문 상태를 API로 가져오기
   const fetchVisitStatus = async (data) => {
@@ -97,6 +105,43 @@ export default function Search() {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    const mapScript = document.createElement("script");
+    mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY&autoload=false`;
+    mapScript.async = true;
+  
+    document.head.appendChild(mapScript);
+  
+    mapScript.onload = () => {
+      window.kakao.maps.load(() => {
+        const container = document.getElementById("map");
+        const options = {
+          center: selectedRestaurant
+            ? new window.kakao.maps.LatLng(selectedRestaurant.lat, selectedRestaurant.lng)
+            : new window.kakao.maps.LatLng(37.2937, 126.9743), // 기본 위치
+          level: 5,
+        };
+  
+        const kakaoMap = new window.kakao.maps.Map(container, options);
+  
+        if (selectedRestaurant) {
+          const markerPosition = new window.kakao.maps.LatLng(
+            selectedRestaurant.lat,
+            selectedRestaurant.lng
+          );
+          const marker = new window.kakao.maps.Marker({
+            position: markerPosition,
+          });
+          marker.setMap(kakaoMap);
+        }
+  
+        setMap(kakaoMap); // 지도 객체 저장
+      });
+    };
+  
+    return () => document.head.removeChild(mapScript);
+  }, [selectedRestaurant]); // selectedRestaurant를 의존성으로 추가
+  
   const handleSearch = () => {
     try {
       if (searchQuery.trim() === "") {
@@ -366,12 +411,7 @@ export default function Search() {
             <div className="kingo-popup-buttons">
               <button
                 className="popup-button"
-                onClick={() =>
-                  window.open(
-                    `https://maps.google.com/?q=${selectedRestaurant.address}`,
-                    "_blank"
-                  )
-                }
+                onClick={() => moveToMapPage(selectedRestaurant)}
               >
                 지도에서 보기
               </button>
