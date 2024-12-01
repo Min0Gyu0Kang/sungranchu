@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/**").permitAll() // 로그인 및 공개 경로
+                        .requestMatchers("/car-direction").permitAll() //지도에서 길찾기
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 .formLogin(formLogin -> formLogin

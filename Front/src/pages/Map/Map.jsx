@@ -15,7 +15,7 @@ export default function MapPage() {
   const [mapReady, setMapReady] = useState(false);
   const location = useLocation(); // 이전 페이지에서 전달된 데이터를 받기
   const restaurant = location.state?.restaurant; // 전달된 식당 데이터
-  
+
   const categories = [
     "All",
     "한식",
@@ -34,57 +34,38 @@ export default function MapPage() {
     const mapScript = document.createElement("script");
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=47367275f913452db1fe86cef05c3d38&autoload=false`;
-  
+
     document.head.appendChild(mapScript);
-  
+
     const onLoadKakaoMap = () => {
       window.kakao.maps.load(() => {
         const container = document.getElementById("map");
         const options = {
           center: restaurant
-            ? new window.kakao.maps.LatLng(restaurant.lat, restaurant.lng) // 전달받은 식당 위치로 중심 설정
-            : new window.kakao.maps.LatLng(37.2937, 126.9743), // 수원캠 기준
+              ? new window.kakao.maps.LatLng(restaurant.lat, restaurant.lng) // 전달받은 식당 위치로 중심 설정
+              : new window.kakao.maps.LatLng(37.2937, 126.9743), // 수원캠 기준
           level: 5, // zoom level
         };
         const map = new window.kakao.maps.Map(container, options);
         setMap(map);
         setMapReady(true);
-  
+
         if (restaurant) {
           // 전달받은 식당 위치에 마커와 InfoWindow 추가
           const markerPosition = new window.kakao.maps.LatLng(
-            restaurant.lat,
-            restaurant.lng
+              restaurant.lat,
+              restaurant.lng
           );
           const marker = new window.kakao.maps.Marker({
             position: markerPosition,
           });
           marker.setMap(map);
-  
-          const infoWindowContent = `
-            <div class="infoWindowContainer" style="padding: 10px; font-size: 14px;">
-              <strong style="font-size: 16px;">${restaurant.name}</strong><br>
-              <div style="margin-top: 5px;">${restaurant.address}</div>
-              <button id="getDirectionButton" style="margin-top: 10px; padding: 8px 12px; font-size: 14px;">길찾기</button>
-            </div>
-          `;
-          const infowindow = new window.kakao.maps.InfoWindow({
-            content: infoWindowContent,
-          });
-          infowindow.open(map, marker);
-          // Add event listener to the button
-          const button = document.getElementById("getDirectionButton");
-          if (button) {
-            button.addEventListener("click", () => {
-              getDirections(restaurant.lat, restaurant.lng);
-            });
-          }
         }
       });
     };
-  
+
     mapScript.addEventListener("load", onLoadKakaoMap);
-  
+
     return () => {
       mapScript.removeEventListener("load", onLoadKakaoMap);
       document.head.removeChild(mapScript);
@@ -92,7 +73,7 @@ export default function MapPage() {
   }, [restaurant]); // restaurant가 변경될 때마다 실행
 
 
-  
+
   const closeAllInfoWindows = () => {
     infoWindows.forEach((infowindow) => infowindow.close());
     setInfoWindows([]);
@@ -127,18 +108,15 @@ export default function MapPage() {
         window.kakao.maps.event.addListener(marker, "click", () => {
           infowindow.open(map, marker);
 
-          // Wait for the InfoWindow to render and then add the event listener
-          setTimeout(() => {
-            const button = document.getElementById(uniqueButtonId);
-            if (button) {
-              button.addEventListener("click", () => {
-                // Call getDirections with the appropriate lat/lng
-                getDirections(lat, lng).then((r) => {
-                  console.log("Directions fetched successfully:", r);
-                });
+          // Ensure that the button exists after InfoWindow content is loaded
+          const button = document.getElementById(uniqueButtonId);
+          if (button) {
+            button.addEventListener("click", () => {
+              getDirections(lat, lng).then((r) => {
+                console.log("Directions fetched successfully:", r);
               });
-            }
-          }, 100);
+            });
+          }
         });
 
         marker.setMap(map);
@@ -169,9 +147,9 @@ export default function MapPage() {
 
       // Filter restaurants based on selected categories
       const filteredRestaurants = selectedCategories.includes("All")
-        ? restaurantsData
-        : restaurantsData.filter((restaurant) =>
-            selectedCategories.includes(restaurant.category)
+          ? restaurantsData
+          : restaurantsData.filter((restaurant) =>
+              selectedCategories.includes(restaurant.category)
           );
 
       console.log("Filtered restaurants in category:", filteredRestaurants);
@@ -190,8 +168,8 @@ export default function MapPage() {
           return prev.filter((cat) => cat !== "All").concat(category);
         }
         return prev.includes(category)
-          ? prev.filter((cat) => cat !== category)
-          : [...prev, category];
+            ? prev.filter((cat) => cat !== category)
+            : [...prev, category];
       }
     });
   };
@@ -203,71 +181,77 @@ export default function MapPage() {
   }, [selectedCategories]);
 
   const getDirections = async (endLat, endLng) => {
-
+    // Get the start coordinates (map center)
+    const startLat = map.getCenter().getLat();
+    const startLng = map.getCenter().getLng();
+    console.log("Coordinates:",startLat,startLng,endLat,endLng);
     try {
+      // Fetch directions from your backend (ensure the backend server is running)
       const response = await fetch(
-          `http://localhost:8080/car-direction?startLat=${37.2937}&startLng=${126.9743}&endLat=${endLat}&endLng=${endLng}`,
-          {
-            method: 'GET',
-          }
+          `http://localhost:8080/car-direction?startLat=${startLat}&startLng=${startLng}&endLat=${endLat}&endLng=${endLng}`,
+          { method: "GET" }
       );
 
-      const data = await response.json();  // Parse the JSON response
-
-      const linePath = [];
-      data.routes[0].sections[0].roads.forEach((router) => {
-        router.vertexes.forEach((vertex, index) => {
-          // Only push lat/lng pairs to linePath
-          if (index % 2 === 0) {
-            // vertexes array is alternating lat, lng; so, pair them correctly
-            linePath.push(new window.kakao.maps.LatLng(router.vertexes[index + 1], router.vertexes[index]));
-          }
+      // Ensure the response is ok (status 200)
+      if (!response.ok) {
+        throw new Error("Failed to fetch directions");
+      }
+      if (response.ok) {
+        console.log('response:',response);
+        const data = await response.json();
+        console.log('Parsed JSON:', data); // Verify the structure here
+        const linePath = [];
+        data.routes[0].sections[0].roads.forEach((router) => {
+          router.vertexes.forEach((vertex, index) => {
+            if (index % 2 === 0) {
+              linePath.push(new window.kakao.maps.LatLng(router.vertexes[index + 1], router.vertexes[index]));
+            }
+          });
         });
-      });
 
-      // Create a polyline to show the route
-      const polyline = new window.kakao.maps.Polyline({
-        path: linePath,
-        strokeWeight: 5,        // Line thickness
-        strokeColor: '#000000', // Line color (black)
-        strokeOpacity: 0.7,     // Line opacity
-        strokeStyle: 'solid'    // Line style (solid)
-      });
+        // Create a polyline to show the route
+        const polyline = new window.kakao.maps.Polyline({
+          path: linePath,
+          strokeWeight: 5,
+          strokeColor: "#000000",
+          strokeOpacity: 0.7,
+          strokeStyle: "solid",
+        });
 
-      // Display the polyline on the map
-      polyline.setMap(map);
+        polyline.setMap(map); // Display the polyline on the map
 
-      console.log("Directions data:", data); // Log the directions data for reference
+      } else {
+        console.error('Failed to fetch directions:', response.statusText);
+      }
 
     } catch (error) {
       console.error("Error fetching directions:", error);
     }
   };
 
-
   return (
-    <div className="container">
-      <div class="map-header">
-        <h2 class="map-title">지도</h2> 
-      </div>
-      <div className="map-container">
-        <div className="map-filter">
-          <div className="filter-menu">
-            {categories.map((category) => (
-              <label key={category}>
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(category)}
-                  onChange={() => handleCategoryChange(category)}
-                />
-                {category}
-              </label>
-            ))}
-          </div>
+      <div className="container">
+        <div class="map-header">
+          <h2 class="map-title">지도</h2>
         </div>
-        <div id="map" ref={containerRef}></div>
+        <div className="map-container">
+          <div className="map-filter">
+            <div className="filter-menu">
+              {categories.map((category) => (
+                  <label key={category}>
+                    <input
+                        type="checkbox"
+                        checked={selectedCategories.includes(category)}
+                        onChange={() => handleCategoryChange(category)}
+                    />
+                    {category}
+                  </label>
+              ))}
+            </div>
+          </div>
+          <div id="map" ref={containerRef}></div>
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
   );
 }
