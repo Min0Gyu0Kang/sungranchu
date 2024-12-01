@@ -11,6 +11,7 @@ export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
   const [map, setMap] = useState(null); // 지도 객체 상태
+  const [marker, setMarker] = useState(null); // 마커 상태 추가
   const navigate = useNavigate();
 
   const moveToMapPage = (restaurant) => {
@@ -124,6 +125,7 @@ export default function Search() {
   
         const kakaoMap = new window.kakao.maps.Map(container, options);
   
+        // selectedRestaurant가 있을 경우 해당 위치에만 마커 표시
         if (selectedRestaurant) {
           const markerPosition = new window.kakao.maps.LatLng(
             selectedRestaurant.lat,
@@ -133,6 +135,18 @@ export default function Search() {
             position: markerPosition,
           });
           marker.setMap(kakaoMap);
+  
+          // InfoWindow 추가
+          const infoWindowContent = `
+            <div style="padding:5px;font-size:12px;">
+              <strong>${selectedRestaurant.name}</strong><br>
+              ${selectedRestaurant.address}
+            </div>
+          `;
+          const infoWindow = new window.kakao.maps.InfoWindow({
+            content: infoWindowContent,
+          });
+          infoWindow.open(kakaoMap, marker);
         }
   
         setMap(kakaoMap); // 지도 객체 저장
@@ -141,6 +155,42 @@ export default function Search() {
   
     return () => document.head.removeChild(mapScript);
   }, [selectedRestaurant]); // selectedRestaurant를 의존성으로 추가
+
+
+  useEffect(() => {
+    if (map && selectedRestaurant) {
+      // 이전 마커 제거
+      if (marker) {
+        marker.setMap(null);
+      }
+  
+      // 새로운 마커 추가
+      const markerPosition = new window.kakao.maps.LatLng(
+        selectedRestaurant.lat,
+        selectedRestaurant.lng
+      );
+      const newMarker = new window.kakao.maps.Marker({
+        position: markerPosition,
+      });
+      newMarker.setMap(map);
+  
+      // InfoWindow 추가
+      const infoWindowContent = `
+        <div style="padding:5px;font-size:12px;">
+          <strong>${selectedRestaurant.name}</strong><br>
+          ${selectedRestaurant.address}
+        </div>
+      `;
+      const infoWindow = new window.kakao.maps.InfoWindow({
+        content: infoWindowContent,
+      });
+      infoWindow.open(map, newMarker);
+  
+      // 상태 업데이트
+      setMarker(newMarker);
+    }
+  }, [map, selectedRestaurant]);
+  
   
   const handleSearch = () => {
     try {
