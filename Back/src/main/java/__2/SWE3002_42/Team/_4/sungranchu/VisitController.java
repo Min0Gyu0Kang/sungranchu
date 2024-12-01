@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,11 +39,18 @@ public class VisitController {
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException(""));
 
-        Visit newVisit = new Visit();
-        newVisit.setMember(member);
-        newVisit.setRestaurant(restaurant);
-        newVisit.setHasReview(false);
+        Optional<Visit> existingVisit = visitRepository.findByMemberAndRestaurant(member, restaurant);
 
-        visitRepository.save(newVisit);
+        if (existingVisit.isPresent()) {
+            visitRepository.delete(existingVisit.get());
+        }
+        else{
+            Visit newVisit = new Visit();
+            newVisit.setMember(member);
+            newVisit.setRestaurant(restaurant);
+            newVisit.setHasReview(false);
+
+            visitRepository.save(newVisit);
+        }
     }
 }

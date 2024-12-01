@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import "./reviewWrite.css";
 import UpperNav from "../../component/upperNav/UpperNav";
 import Footer from "../../component/footer/Footer";
@@ -8,31 +8,28 @@ export default function ReviewWrite() {
   const { restaurantId } = useParams(); // URL 파라미터에서 restaurantId 가져오기
   const [reviewText, setReviewText] = useState("");
   const [selectedRating, setSelectedRating] = useState(0); // 선택한 별점 상태
+  const [restaurants, setRestaurants] = useState([]);
   const maxLength = 2000;
+  const navigate = useNavigate();
 
-  const restaurants = [
-    {
-      id: 1,
-      name: "청년다방 성균관대점",
-    },
-    {
-      id: 2,
-      name: "홍콩반점 0410 강남점",
-    },
-    {
-      id: 3,
-      name: "청년다방 2",
-    },
-    {
-      id: 4,
-      name: "홍콩반점 2",
-    },
-    {
-      id: 5,
-      name: "청년다방 3",
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/restaurants.json");
+        const restaurantData = await response.json();
+        const restaurants2 = restaurantData.flatMap(
+            (category) => category.items
+        );
 
+        setRestaurants(restaurants2);
+
+      } catch (error) {
+        console.error("Error fetching restaurant data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   const restaurant = restaurants.find((r) => r.id === parseInt(restaurantId));
 
   if (!restaurant) {
@@ -56,9 +53,21 @@ export default function ReviewWrite() {
   };
 
   const handleSubmit = () => {
+    const combinedData = new URLSearchParams({
+      content: reviewText,
+      rating: selectedRating
+    }).toString();
+    fetch(`/mypage/review/write/${restaurant.id}/add`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: combinedData,
+    })
     alert(
       `"${restaurant.name}"의 리뷰가 작성되었습니다! 별점: ${selectedRating}점`
     );
+    navigate("/mypage/review");
   };
 
   return (

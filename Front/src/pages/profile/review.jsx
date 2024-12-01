@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "./profile.css"; // 기존 profile.css 스타일 사용
 import UpperNav from "../../component/upperNav/UpperNav"; // 상단 네비게이션
 import Footer from "../../component/footer/Footer"; // 하단 푸터
@@ -8,55 +8,81 @@ const filledStar = "/image/filled_star.svg";
 const emptyStar = "/image/empty_star.svg";
 
 export default function ReviewPage() {
+  const [visitedRestaurants, setVisitedRestaurants] = useState([]);
   const navigate = useNavigate();
-  const restaurants = [
-    {
-      id: 1,
-      name: "청년다방 성균관대점",
-      location: "경기도 수원시 장안구 서부로 2066",
-      category: "양식, 한식",
-      rating: 3.5,
-      reviews: 8,
-      image: "/image/filled_star.svg",
-    },
-    {
-      id: 2,
-      name: "홍콩반점 0410 강남점",
-      location: "서울특별시 강남구 테헤란로 123",
-      category: "중식",
-      rating: 4.2,
-      reviews: 15,
-      image: "/image/empty_star.svg",
-    },
-    {
-      id: 3,
-      name: "청년다방 2",
-      location: "경기도 수원시 장안구 서부로 2066",
-      category: "양식, 한식",
-      rating: 3.5,
-      reviews: 8,
-      image: "/image/filled_star.svg",
-    },
-    {
-      id: 4,
-      name: "홍콩반점 2",
-      location: "서울특별시 강남구 테헤란로 123",
-      category: "중식",
-      rating: 4.2,
-      reviews: 15,
-      image: "/image/empty_star.svg",
-    },
-    {
-      id: 5,
-      name: "청년다방 3",
-      location: "경기도 수원시 장안구 서부로 2066",
-      category: "양식, 한식",
-      rating: 3.5,
-      reviews: 8,
-      image: "/image/filled_star.svg",
-    },
-  ];
 
+  useEffect(() => {
+    const fetchVisitedData = async () => {
+      try {
+        const response = await fetch("/mypage/review/info", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch visited restaurant data.");
+        }
+
+        const restaurantIds = await response.json();
+        console.log("Fetched restaurant IDs:", restaurantIds);
+
+        // restaurantIds에서 id 값만 추출
+        const ids = restaurantIds.map((restaurant) => restaurant.id);
+        console.log("Extracted IDs:", ids);
+
+        // JSON 데이터를 가져와 필터링
+        const response2 = await fetch("/restaurants.json");
+        const restaurantData = await response2.json();
+
+        //리뷰 가져오기
+        const response3 = await fetch("/allReview", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        if (!response3.ok) {
+          throw new Error("Failed to fetch review data.");
+        }
+        const reviewData = await response3.json();
+
+        // 모든 items를 병합하여 하나의 배열로 만듦
+        const allRestaurants = restaurantData.flatMap(
+            (category) => category.items
+        );
+
+        // ids 배열과 매칭
+        const matchedRestaurants = allRestaurants.filter((item) =>
+            ids.includes(item.id)
+        );
+
+        // 이미지 경로 추가
+        const updatedRestaurants = matchedRestaurants.map((restaurant) => ({
+          ...restaurant,
+          img: `/image/${restaurant.id}.png`, // id를 기반으로 이미지 경로 생성
+          category: restaurantIds.find((item) => item.id === restaurant.id).category,
+        }));
+        console.log(`restaurant.id: {restaurant.id}`);
+        reviewData.forEach((review)=>{
+          const restaurant = updatedRestaurants.find((r) => r.id === review.id);
+          if (restaurant) {
+            restaurant.reviews.push({ text: review.content, rating: review.rating });
+          }
+        });
+
+        setVisitedRestaurants(updatedRestaurants);
+
+      } catch (error) {
+        console.error("Error fetching restaurant data:", error);
+      }
+    };
+
+    fetchVisitedData();
+  }, []);
   const handleReviewClick = (restaurantId) => {
     navigate(`/mypage/review/write/${restaurantId}`);
   };
@@ -65,13 +91,13 @@ export default function ReviewPage() {
     <div className="container review-page">
       <UpperNav title="리뷰 작성" goBack={true} />
       <div className="scrollable-content">
-        {restaurants.map((restaurant) => (
-          <div key={restaurant.id} className="profile-card">
+        {visitedRestaurants.map((restaurant, index) => (
+          <div key={index} className="profile-card">
             {/* 왼쪽: 식당 이미지 */}
             <div className="profile-left">
               <img
                 className="profile-image"
-                src={restaurant.image}
+                src={restaurant.img}
                 alt={restaurant.name}
               />
             </div>
@@ -90,9 +116,15 @@ export default function ReviewPage() {
                       <img
                         key={i}
                         src={
-                          i < Math.floor(restaurant.rating)
-                            ? filledStar
-                            : emptyStar
+                          i <
+                          Math.floor(
+                              restaurant.reviews.reduce(
+                                  (sum, review) => sum + review.rating,
+                                  0
+                              ) / restaurant.reviews.length
+                          )
+                              ? filledStar
+                              : emptyStar
                         }
                         alt="star"
                         style={{ width: "16px", height: "16px" }} // 별 크기 조정
@@ -103,7 +135,7 @@ export default function ReviewPage() {
                   className="right-text"
                   style={{ fontSize: "14px", color: "#666" }}
                 >
-                  ({restaurant.reviews})
+                  ({restaurant.reviews.length})
                 </span>
               </div>
               {/* 주소와 카테고리 */}
@@ -111,7 +143,7 @@ export default function ReviewPage() {
                 style={{ marginTop: "8px", fontSize: "12px", color: "#666" }}
               >
                 <p style={{ margin: "0", lineHeight: "1.5" }}>
-                  {restaurant.location}
+                  {restaurant.address}
                 </p>
                 <p style={{ margin: "0", lineHeight: "1.5" }}>
                   {restaurant.category}
