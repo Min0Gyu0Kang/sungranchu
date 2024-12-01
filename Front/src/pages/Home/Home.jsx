@@ -211,9 +211,6 @@ export default function Home() {
       setRandomRestaurant(null); // 안전 처리
     }
   };
-  
-  
-  
 
   const closePopup = () => {
     setPopupVisible(false);
