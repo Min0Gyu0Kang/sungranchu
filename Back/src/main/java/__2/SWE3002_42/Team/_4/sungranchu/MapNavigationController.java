@@ -3,7 +3,6 @@ package __2.SWE3002_42.Team._4.sungranchu;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
@@ -19,13 +18,9 @@ public class MapNavigationController {
 
     private static final String API_URL = "https://apis-navi.kakaomobility.com/v1/directions";
 
-    private final MemberRepository memberRepository;
-
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/car-direction")
-    public ResponseEntity<?> getCarDirection(Authentication auth, @RequestParam Double startLng, @RequestParam Double startLat, @RequestParam Double endLng, @RequestParam Double endLat) {
-        String nickname = auth.getName();
-        Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException(""));
+    public ResponseEntity<?> getCarDirection(@RequestParam Double startLng, @RequestParam Double startLat, @RequestParam Double endLng, @RequestParam Double endLat) {
 
         // Prepare query parameters for the API request
         String origin = startLng + "," + startLat;

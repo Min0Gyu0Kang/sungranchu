@@ -98,21 +98,26 @@ export default function MapPage() {
     setInfoWindows([]);
   };
 
-  
-
   const batchMarkers = (restaurants, batchSize) => {
     let index = 0;
     const interval = setInterval(() => {
       const batch = restaurants.slice(index, index + batchSize);
-      batch.forEach((place) => {
+      batch.forEach((place, i) => {
         const { lat, lng, name } = place;
         const markerPosition = new window.kakao.maps.LatLng(lat, lng);
         const marker = new window.kakao.maps.Marker({
           position: markerPosition,
         });
 
-        // Create InfoWindow
-        const iwContent = `<div style="padding:5px;font-size:12px;">${name}</div>`;
+        // Generate a unique button ID using index or a unique property from `place`
+        const uniqueButtonId = `getDirectionButton_${index}_${i}`;
+
+        // Create InfoWindow with unique button ID
+        const iwContent = `
+<div style="padding:5px;font-size:12px;height:auto;">
+  ${name}<br>
+  <button id="${uniqueButtonId}" style="margin-top: 10px; padding: 8px 12px; font-size: 14px;">길찾기</button>
+</div>`;
         const infowindow = new window.kakao.maps.InfoWindow({
           content: iwContent,
           removable: true,
@@ -121,6 +126,19 @@ export default function MapPage() {
         // Add click listener to open the InfoWindow
         window.kakao.maps.event.addListener(marker, "click", () => {
           infowindow.open(map, marker);
+
+          // Wait for the InfoWindow to render and then add the event listener
+          setTimeout(() => {
+            const button = document.getElementById(uniqueButtonId);
+            if (button) {
+              button.addEventListener("click", () => {
+                // Call getDirections with the appropriate lat/lng
+                getDirections(lat, lng).then((r) => {
+                  console.log("Directions fetched successfully:", r);
+                });
+              });
+            }
+          }, 100);
         });
 
         marker.setMap(map);
@@ -131,6 +149,7 @@ export default function MapPage() {
         // Track the marker
         setMarkers((prevMarkers) => [...prevMarkers, marker]);
       });
+
       index += batchSize;
 
       if (index >= restaurants.length) {
@@ -138,6 +157,7 @@ export default function MapPage() {
       }
     }, 100);
   };
+
 
   useEffect(() => {
     if (mapReady && map) {
@@ -182,13 +202,11 @@ export default function MapPage() {
     }
   }, [selectedCategories]);
 
-  const getDirections = async (startLat, startLng) => {
-    const endLat = restaurant.lat; // Example: Replace with actual destination latitude
-    const endLng = restaurant.lng; // Example: Replace with actual destination longitude
+  const getDirections = async (endLat, endLng) => {
 
     try {
       const response = await fetch(
-          `http://localhost:8080/car-direction?startLat=${startLat}&startLng=${startLng}&endLat=${endLat}&endLng=${endLng}`,
+          `http://localhost:8080/car-direction?startLat=${37.2937}&startLng=${126.9743}&endLat=${endLat}&endLng=${endLng}`,
           {
             method: 'GET',
           }
