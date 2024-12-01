@@ -49,7 +49,7 @@
 }
 
 .category.selected {
-  border-color: #366243;
+  border-color: #519a51;
   background-color: #f0fff0;
 }
 
@@ -339,7 +339,6 @@
   padding: 20px;
   width: 90%; /* 모바일 기준 크기 */
   max-width: 400px; /* 최대 크기 */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
   text-align: center; /* 텍스트 중앙 정렬 */
   animation: slide-down 0.3s ease-out; /* 나타나는 애니메이션 */
 }
@@ -379,7 +378,7 @@
 .popup-services li {
   font-size: 14px;
   color: #444444;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   line-height: 1.5;
 }
 
@@ -390,7 +389,21 @@
   text-decoration: none; /* 밑줄 제거 */
   background: #366243; /* 초록색 버튼 */
   color: #ffffff; /* 버튼 텍스트 흰색 */
-  padding: 10px 20px;
+  padding: 10px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: background-color 0.3s ease;
+  justify-content: center;
+}
+
+.popup-map-button {
+  flex: 1;
+  display: inline-block;
+  text-decoration: none; /* 밑줄 제거 */
+  background: #366243; /* 초록색 버튼 */
+  color: #ffffff; /* 버튼 텍스트 흰색 */
+  padding: 10px 10px;
   border-radius: 8px;
   font-size: 14px;
   margin-bottom: 16px;

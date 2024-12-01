@@ -10,7 +10,7 @@ import reviewIcon from "./img/review_icon.png";
 import achievementIcon from "./img/achievement_icon.png";
 import baseImage from "./img/basic_profile.png";
 
-export default function MyPage() {
+export default function MyPage({globalProfileImage, SetGlobalProfileImage}) {
   const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState(baseImage); // 로그인하고 이미지를 변경하면 이 이미지가 동적으로 변경되도록 바꿔야 함.
   const [nickname, setNickname] = useState('마라엽떡');
@@ -89,7 +89,7 @@ export default function MyPage() {
       </div>
   
       <ProfileCard
-        profileImage={profileImage}
+        profileImage={globalProfileImage}
         nickname={nickname}
         leftText="Lv: 1"
         rightText="초보 먹방러"

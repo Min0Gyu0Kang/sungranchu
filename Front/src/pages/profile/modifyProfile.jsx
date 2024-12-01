@@ -8,7 +8,7 @@ import baseImage from './img/basic_profile.png';
 import profileIcon from './img/profile_icon.png'
 import cameraIcon from './img/camera_icon.png'
 
-export default function ModifyPage () {
+export default function ModifyPage ({globalProfileImage, setGlobalProfileImage}) {
   const goBack = true;
   const [profileImage, setProfileImage] = useState(baseImage);
   const [nickname, setNickname] = useState('마라엽떡');
@@ -75,7 +75,9 @@ export default function ModifyPage () {
       formData.append("image", file); // 서버에서 @RequestParam("image")와 매핑
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result); // Base64 URL을 상태에 저장
+        const uploadedImage = reader.result;
+        setProfileImage(uploadedImage); // Base64 URL을 상태에 저장
+        setGlobalProfileImage(uploadedImage);
       };
       reader.readAsDataURL(file);
   
@@ -136,7 +138,7 @@ export default function ModifyPage () {
         <div className="profile-image-wrapper">
           <img
             className="profile-image-modify-page"
-            src={profileImage}
+            src={globalProfileImage}
             alt="Profile"
           />
           <label htmlFor="image-upload" >
